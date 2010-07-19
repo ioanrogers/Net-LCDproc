@@ -123,6 +123,6 @@ while (1) {
 
     update_hdd_widgets($widgets);
     $lcdproc->update();
-    sleep(1);
+    sleep(60);
 }
 

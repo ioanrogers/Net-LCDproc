@@ -1,0 +1,20 @@
+Source: libnet-lcdproc-perl
+Section: perl
+Priority: optional
+Build-Depends: debhelper (>= 7), perl (>= 5.10) | libmodule-build-perl
+Build-Depends-Indep: perl (>= 5.10.0), libmoose-perl,
+  libnamespace-autoclean-perl, libthrowable-perl,
+  libyaml-libyaml-perl
+Maintainer: Ioan Rogers <ioan.rogers@gmail.com>
+Standards-Version: 3.8.3
+Homepage: http://search.cpan.org/dist/Net-LCDproc/
+
+Package: libnet-lcdproc-perl
+Architecture: all
+Depends: ${perl:Depends}, ${misc:Depends}, libmoose-perl,
+  libnamespace-autoclean-perl, libthrowable-perl,
+  libyaml-libyaml-perl, perl (>= 5.10.0)
+Description: LCDproc client library
+ LCDproc client library
+ .
+ This description was automagically extracted from the module by dh-make-perl.
