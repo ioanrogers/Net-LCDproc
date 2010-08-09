@@ -25,7 +25,7 @@ has screen => (
 
 has _conn => (
     is       => 'rw',
-    isa      => 'Net::LCDproc::Net',
+    isa      => 'Net::LCDproc::Error | Net::LCDproc::Net',
     required => 0,
 );
 
@@ -130,4 +130,3 @@ no Moose;
 __PACKAGE__->meta->make_immutable;
 
 1;
-

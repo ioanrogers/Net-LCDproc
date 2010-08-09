@@ -3,66 +3,69 @@ package Net::LCDproc::Net;
 use v5.10.0;
 use Moose;
 use Net::LCDproc::Error;
+
 use IO::Socket::INET;
 use YAML::XS;
 
 sub DEMOLISH {
     my $self = shift;
-    say "Shutting down socket";
-    $self->socket->shutdown('2');
+    if ( $self->has_socket && defined $self->socket ) {
+        say "Shutting down socket";
+        $self->socket->shutdown('2');
+    }
 }
 
 has server => (
-    is       => 'rw',
+    is       => 'ro',
     isa      => 'Str',
     required => 1,
-    default  => 'localhost',
 );
 
 has port => (
-    is       => 'rw',
+    is       => 'ro',
     isa      => 'Int',
     required => 1,
-    default  => 13666,
 );
 
 has socket => (
-    is         => 'ro',
-    isa        => 'IO::Socket::INET',
-    required   => 1,
-    builder    => '_connect',
-    lazy       => 1,
+    is        => 'rw',
+    isa       => 'IO::Socket::INET',
+    predicate => 'has_socket',
 );
 
 sub _connect {
     my $self = shift;
 
     my $socket = IO::Socket::INET->new(
-        PeerAddr => $self->server,
-        PeerPort => $self->port,
+        PeerAddr  => $self->server,
+        PeerPort  => $self->port,
         ReuseAddr => 1,
-#        Timeout => '5',
     );
 
-    if ( !$socket ) {
-        Net::LCDproc::Error->throw( sprintf "Couldn't connect to lcdproc at '%s:%s': %s",
-            $self->server, $self->port, $! );
+    if ( !defined $socket ) {
+
+        Net::LCDproc::Error->throw(
+            message    => sprintf ("Couldn't connect to lcdproc server at '%s:%s': %s",
+                                    $self->server, $self->port, $!),
+            class_name => __PACKAGE__,
+            object     => $self, 
+        );
     }
 
-    return $socket;
+    $self->socket($socket);
 
 }
 
 sub _send_cmd {
-    my ($self, $cmd) = @_;
+    my ( $self, $cmd ) = @_;
 
     say "Sending '$cmd'";
 
     my $ret = $self->socket->send($cmd);
-    if (!defined $ret) {
-        die "Error sending $cmd";
+    if ( !defined $ret ) {
+        Net::LCDproc::Error->throw("Error sending $cmd: $!");
     }
-    
+
     return;
 }
 
@@ -71,18 +74,13 @@ sub _recv_response {
     $self->socket->recv( my $response, 4096 );
 
     if ( !defined $response ) {
-        Net::LCDproc::Error->throw("No reponse from lcdproc: $!");
+        Net::LCDproc::Error->throw("No response from lcdproc: $!");
     }
-    
+
     chomp $response;
     say "Received '$response'";
-    
-    #say Dump($self->socket);
-    #say "Returning";
+
     return $response;
 }
 
-
 1;
-
-

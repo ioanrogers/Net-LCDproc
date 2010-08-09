@@ -4,14 +4,25 @@ package Net::LCDproc;
 
 use 5.0100;
 use Moose;
+use Net::LCDproc::Error;
 use Net::LCDproc::Net;
-with 'Throwable';
-
 use YAML::XS;
 
-use Net::LCDproc::Error;
-
 use namespace::autoclean;
+
+has server => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 1,
+    default  => 'localhost',
+);
+
+has port => (
+    is       => 'ro',
+    isa      => 'Int',
+    required => 1,
+    default  => 13666,
+);
 
 has width => (
     is  => 'rw',
@@ -44,13 +55,6 @@ has _conn => (
     is      => 'rw',
     isa     => 'Net::LCDproc::Net',
 );
-
-sub init {
-    my $self = shift;
-    my $conn = Net::LCDproc::Net->new();
-    $self->_send_hello($conn);
-    $self->_conn($conn);
-}
 
 sub add_screen {
     my ( $self, $screen ) = @_;
@@ -85,11 +89,19 @@ sub update {
     
 }
 
-sub _send_hello {
-    my ($self, $con) = @_;
+sub init {
+    my $self = shift;
+    my $conn = Net::LCDproc::Net->new(server => $self->server, port => $self->port);
+    $conn->_connect;
+    $self->_conn($conn);
+    $self->_send_hello;
+}
 
-    $con->_send_cmd('hello');
-    my $response = $con->_recv_response();
+sub _send_hello {
+    my $self = shift;
+
+    $self->_conn->_send_cmd('hello');
+    my $response = $self->_conn->_recv_response();
 
     if ( $response =~
         m/^connect LCDproc \S+ protocol (\S+) lcd wid (\d+) hgt (\d+) cellwid (\d+) cellhgt (\d+)$/
