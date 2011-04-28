@@ -6,9 +6,10 @@ use 5.0100;
 use Moose;
 use Net::LCDproc::Error;
 use Net::LCDproc::Net;
-use YAML::XS;
-
+use Log::Any qw($log);
 use namespace::autoclean;
+
+use constant PROTOCOL_VERSION => 0.3;
 
 has server => (
     is       => 'ro',
@@ -52,15 +53,15 @@ has screens => (
 );
 
 has _conn => (
-    is      => 'rw',
-    isa     => 'Net::LCDproc::Net',
+    is  => 'rw',
+    isa => 'Net::LCDproc::Net',
 );
 
 sub add_screen {
     my ( $self, $screen ) = @_;
-    $screen->_conn($self->_conn);
+    $screen->_conn( $self->_conn );
     push @{ $self->screens }, $screen;
-    
+
     return $screen;
 }
 
@@ -69,14 +70,14 @@ sub remove_screen {
     my $i = 0;
     foreach my $s ( @{ $self->screens } ) {
         if ( $s == $screen ) {
-            say "Removing $s";
-            splice( @{ $self->screens }, $i, 1 );
+            $log->debug("Removing $s") if $log->is_debug;
+            splice @{ $self->screens }, $i, 1;
             return 1;
         }
         $i++;
     }
-    say "Failed to remove screen";
-    return -1;
+    $log->error('Failed to remove screen');
+    return;
 
 }
 
@@ -86,39 +87,40 @@ sub update {
     foreach my $s ( @{ $self->screens } ) {
         $s->update();
     }
-    
+    return 1;
 }
 
 sub init {
     my $self = shift;
-    my $conn = Net::LCDproc::Net->new(server => $self->server, port => $self->port);
-    $conn->_connect;
+    my $conn = Net::LCDproc::Net->new( server => $self->server, port => $self->port );
+    $conn->connect_to_lcdproc;
     $self->_conn($conn);
     $self->_send_hello;
+
+    return 1;
 }
 
 sub _send_hello {
     my $self = shift;
 
-    $self->_conn->_send_cmd('hello');
-    my $response = $self->_conn->_recv_response();
+    my $response = $self->_conn->send_cmd('hello');
 
-    if ( $response =~
-        m/^connect LCDproc \S+ protocol (\S+) lcd wid (\d+) hgt (\d+) cellwid (\d+) cellhgt (\d+)$/
-      )
-    {
-
-        # TODO check protocol version
-
-        $self->width($2);
-        $self->height($3);
-        $self->cell_width($4);
-        $self->cell_height($5);
-    } else {
-        die "Invalid reponse from server: '$response'";
+    if ( !ref $response eq 'ARRAY' ) {
+        Net::LCDproc::Error->throw("Failed to read connect string");
     }
-    
-    return;
+    my $proto = $response->[1];
+
+    $log->infof( 'Connected to LCDproc version %s, proto %s', $response->[0], $proto );
+    if ( $proto != PROTOCOL_VERSION ) {
+        Net::LCDproc::Error->throwf( "Unsupported protocol version. Available: %s Supported: %s",
+            $proto, PROTOCOL_VERSION );
+    }
+    $self->width( $response->[2] );
+    $self->height( $response->[3] );
+    $self->cell_width( $response->[4] );
+    $self->cell_height( $response->[5] );
+
+    return 1;
 }
 
 no Moose;
@@ -126,4 +128,3 @@ no Moose;
 __PACKAGE__->meta->make_immutable;
 
 1;
-

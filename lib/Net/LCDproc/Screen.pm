@@ -1,11 +1,10 @@
 package Net::LCDproc::Screen;
 
-use v5.10.0;
+use 5.0100;
 use Moose;
 use Moose::Util::TypeConstraints;
-
+use Log::Any qw($log);
 use namespace::autoclean;
-use YAML::XS;
 
 with 'Net::LCDproc::Meta::Attribute::LCDproc::Screen';
 
@@ -121,10 +120,11 @@ has _conn => (
 sub set {
     my ( $self, $attr_name, $new_val ) = @_;
 
-    say sprintf "Setting %s: '%s'", $attr_name, $new_val;
+    $log->debugf( "Setting %s: '%s'", $attr_name, $new_val ) if $log->is_debug;
     my $attr = $self->meta->get_attribute($attr_name);
     $attr->set_value( $self, $new_val );
     $attr->is_changed;
+    return 1;
 }
 
 # updates the screen on the server
@@ -134,25 +134,22 @@ sub update {
     if ( $self->is_new ) {
 
         # screen needs to be added
-        say "Adding " . $self->id;
-        $self->_conn->_send_cmd( 'screen_add ' . $self->id );
-        my $response = $self->_conn->_recv_response();
-        $response = $self->_conn->_recv_response();
+        $log->debug( 'Adding ' . $self->id ) if $log->is_debug;
+        $self->_conn->send_cmd( 'screen_add ' . $self->id );
         $self->added;
     }
 
     # even if the screen was new, we leave defaults up to the LCDproc server
     # so nothing *has* to be set
     my $changes = $self->_list_changes();
-    
+
     if ($changes) {
-        #say "Updating screen: " . $self->id;
+        $log->debug( 'Updating screen: ' . $self->id ) if $log->is_debug;
         foreach my $attr_name ( @{$changes} ) {
 
             my $cmd_str = $self->_get_cmd_str_for($attr_name);
 
-            $self->_conn->_send_cmd($cmd_str);
-            my $response = $self->_conn->_recv_response();
+            $self->_conn->send_cmd($cmd_str);
 
             my $attr = $self->meta->get_attribute($attr_name);
             $attr->change_updated;
@@ -163,7 +160,7 @@ sub update {
     foreach my $widget ( @{ $self->widgets } ) {
         $widget->update();
     }
-
+    return 1;
 }
 
 # TODO accept an arrayref of widgets
@@ -172,17 +169,19 @@ sub add_widget {
     $widget->screen($self);
     $widget->_conn( $self->_conn );
     push @{ $self->widgets }, $widget;
+    return 1;
 }
 
 # removes screen from N::L, deletes from server, then cascades and kills its widgets (optionally not)
-sub delete {
+sub remove {
     my ( $self, $keep_widgets ) = @_;
 
     if ( !defined $keep_widgets ) {
         foreach my $widget ( @{ $self->widgets } ) {
-            $widget->delete;
+            $widget->remove;
         }
     }
+    return 1;
 }
 
 ### Private Methods
@@ -194,11 +193,11 @@ sub _get_cmd_str_for {
 
     my $attr = $self->meta->get_attribute($attr_name);
     if ( $attr->does('Net::LCDproc::Meta::Attribute::Trait') && $attr->has_cmd_str ) {
-        $cmd_str .= sprintf " %s \"%s\"", $attr->cmd_str, $attr->get_value($self);
+        $cmd_str .= sprintf ' %s "%s"', $attr->cmd_str, $attr->get_value($self);
         return $cmd_str;
     }
 
-    return undef;
+    return;
 
 }
 
@@ -210,13 +209,13 @@ sub _list_changes {
     foreach my $attr_name ( $self->meta->get_attribute_list ) {
         my $attr = $self->meta->get_attribute($attr_name);
         if ( $attr->does('Net::LCDproc::Meta::Attribute::Trait') && $attr->changed ) {
-            if ($attr->changed) {
+            if ( $attr->changed ) {
                 push @changes, $attr_name;
             }
         }
     }
-    if (scalar @changes == 0) {
-        return undef;
+    if ( scalar @changes == 0 ) {
+        return;
     }
     return \@changes;
 }
@@ -226,4 +225,3 @@ no Moose;
 __PACKAGE__->meta->make_immutable;
 
 1;
-

@@ -13,11 +13,12 @@ has class_name => (
     is       => 'ro',
     isa      => 'Str',
     required => 1,
+    default  => sub { caller(11) },    # XXX: this seems fragile
 );
 
 has object => (
-    is       => 'ro',
-    isa      => 'Object',
+    is        => 'ro',
+    isa       => 'Object',
     predicate => 'has_object',
 );
 
@@ -28,17 +29,24 @@ sub short_msg {
 
 sub dump {
     my $self = shift;
-    if ($self->has_object) {
+    if ( $self->has_object ) {
         $Data::Dumper::Terse = 1;
-        return Data::Dumper->Dump([$self->object]);
+        return Data::Dumper->Dump( [ $self->object ] );
     }
-    
+
     return "No object was set by the throwing class";
 }
 
+sub throwf {
+    my $self = shift;
+    my $msg_str = shift;
+    my @args = @_;
+    
+    $self->throw( sprintf $msg_str, @args );
+}
 
 no Moose;
-__PACKAGE__->meta->make_immutable(inline_constructor => 0);;
+__PACKAGE__->meta->make_immutable( inline_constructor => 0 );
 
 1;
 

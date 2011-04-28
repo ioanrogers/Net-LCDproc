@@ -1,9 +1,8 @@
 package Net::LCDproc::Widget;
 
-use v5.10.0;
+use 5.0100;
 use Moose;
-
-use YAML::XS;
+use Log::Any qw($log);
 
 use namespace::autoclean;
 
@@ -43,7 +42,7 @@ has changed => (
     is      => 'rw',
     isa     => 'Bool',
     handles => {
-        has_changed     => 'set',
+        has_changed    => 'set',
         change_updated => 'unset',
     },
 );
@@ -58,46 +57,55 @@ has _set_cmd => (
 sub set {
     my ( $self, $attr_name, $new_val ) = @_;
 
-    say sprintf "Setting %s: '%s'", $attr_name, $new_val;
+    $log->debugf( 'Setting %s: "%s"', $attr_name, $new_val ) if $log->is_debug;
     my $attr = $self->meta->get_attribute($attr_name);
     $attr->set_value( $self, $new_val );
     $self->is_changed;
+
+    return 1;
 }
 
 sub update {
     my $self = shift;
 
     if ( $self->is_new ) {
+
         # needs to be added
         $self->_create_widget_on_server;
     }
 
-    if (!$self->changed) {
+    if ( !$self->changed ) {
         return;
     }
-    #say "Updating widget: " . $self->id;    
+    $log->debug( 'Updating widget: ' . $self->id ) if $log->is_debug;
     my $cmd_str = $self->_get_set_cmd_str;
 
-    $self->_conn->_send_cmd($cmd_str);
-    my $response = $self->_conn->_recv_response();
+    $self->_conn->send_cmd($cmd_str);
 
     $self->change_updated;
+    return 1;
 }
 
 # removes this widget from the LCDproc server, unhooks from $self->server, then destroys itself
-sub delete {
+sub remove {
     my $self = shift;
+
+    my $cmd_str = sprintf 'widget_del %s %s', $self->screen->id, $self->id;
+    $self->_conn->send_cmd($cmd_str);
+
+    return 1;
 }
 
 ### Private Methods
 sub _get_set_cmd_str {
-    my ( $self) = @_;
+    my ($self) = @_;
 
-    my $cmd_str = sprintf "widget_set %s %s", $self->screen->id, $self->id;
-    
-    foreach my $name ( @{$self->_set_cmd} ) {
+    my $cmd_str = sprintf 'widget_set %s %s', $self->screen->id, $self->id;
+
+    foreach my $name ( @{ $self->_set_cmd } ) {
         my $attr = $self->meta->get_attribute($name);
-        my $val = $attr->get_value($self);
+        my $val  = $attr->get_value($self);
+
         # should only ever be Str or Int
         if ( $attr->type_constraint eq 'Str' ) {
             $cmd_str .= " \"$val\"";
@@ -105,25 +113,23 @@ sub _get_set_cmd_str {
             $cmd_str .= " $val";
         }
     }
-    
+
     return $cmd_str;
 
 }
 
 sub _create_widget_on_server {
     my $self = shift;
-    say "Adding new widget";
-    $self->_conn->_send_cmd( sprintf "widget_add %s %s %s",
-    $self->screen->id, $self->id, $self->type );
-    my $response = $self->_conn->_recv_response();
-    #$response = $self->_conn->_recv_response();
+    $log->debugf( 'Adding new widget: %s - %s', $self->id, $self->type ) if $log->is_debug;
+    $self->_conn->send_cmd( sprintf 'widget_add %s %s %s',
+        $self->screen->id, $self->id, $self->type );
+
     $self->added;
+
     # make sure it gets set
     $self->has_changed;
-        
+    return 1;
 }
-
-
 
 no Moose;
 

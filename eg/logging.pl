@@ -9,24 +9,32 @@ use Net::LCDproc;
 use Net::LCDproc::Screen;
 use Net::LCDproc::Widget::Title;
 use Net::LCDproc::Widget::String;
-
 use Sys::Hostname;
-use YAML::XS;
-use Try::Tiny;
+use Log::Any::Adapter;
+use Log::Dispatch;
 
 my $lcdproc;
 my $screen;
 
-$lcdproc = Net::LCDproc->new( server => 'localhost', port => 1234 );
-
-try {
-    $lcdproc->init;
+my $loglevel = 'info';
+if ( defined $ARGV[0] ) {
+    $loglevel = $ARGV[0];
 }
-catch {
-    say "cannot connect: " . $_->message;
-    say $_->dump;
-    die $_->short_msg;
-};
+
+my $log = Log::Dispatch->new(
+    outputs => [
+        [
+            'Screen',
+            min_level => $loglevel,
+            newline   => 1,
+        ],
+    ]
+);
+Log::Any::Adapter->set( 'Dispatch', dispatcher => $log );
+
+$lcdproc = Net::LCDproc->new;
+
+$lcdproc->init;
 
 $screen = Net::LCDproc::Screen->new( id => "main" );
 

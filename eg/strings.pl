@@ -36,37 +36,36 @@ sub setup_lcdproc_screen {
 sub get_date_time {
     my $dt = DateTime->now;
 
-    my $date_str =  sprintf "%s %d %s %d",
-        $dt->day_abbr,  $dt->day,  $dt->month_abbr, $dt->year;
-    return ($dt->hms, $date_str);
+    my $date_str = sprintf "%s %d %s %d", $dt->day_abbr, $dt->day, $dt->month_abbr, $dt->year;
+    return ( $dt->hms, $date_str );
 }
- 
+
 sub add_hdd_widgets {
 
     my %widgets;
 
-    my ($time_str, $date_str) = get_date_time();
-    
+    my ( $time_str, $date_str ) = get_date_time();
+
     my $clock = Net::LCDproc::Widget::String->new(
         id   => "clock",
         x    => 1,
         y    => 2,
         text => $time_str,
     );
-    
+
     $widgets{clock} = $clock;
     $screen->add_widget($clock);
-    
+
     my $date = Net::LCDproc::Widget::String->new(
         id   => "date",
         x    => 1,
         y    => 3,
         text => $date_str,
     );
-    
-    $widgets{date} = $date;    
+
+    $widgets{date} = $date;
     $screen->add_widget($date);
-    
+
     return \%widgets;
 }
 
@@ -74,15 +73,15 @@ setup_lcdproc_screen();
 my $widgets = add_hdd_widgets();
 
 while (1) {
-    
-    my ($time_str, $date_str) = get_date_time();
-    
+
+    my ( $time_str, $date_str ) = get_date_time();
+
     $widgets->{clock}->text($time_str);
+
     # if day hasn't changed, don't update
-    if ($widgets->{date}->text ne $date_str) {    
+    if ( $widgets->{date}->text ne $date_str ) {
         $widgets->{date}->text($date_str);
     }
     $lcdproc->update();
     sleep(1);
 }
-
