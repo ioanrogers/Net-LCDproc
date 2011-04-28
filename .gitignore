@@ -1,3 +1,5 @@
 *~
 Net-LCDproc-*
 debian/libnet-lcdproc-perl*
+.build
+
