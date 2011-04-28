@@ -128,3 +128,60 @@ no Moose;
 __PACKAGE__->meta->make_immutable;
 
 1;
+
+__END__
+
+=head1 NAME
+
+B<Net::LCDproc>
+
+=head1 DESCRIPTION
+
+Client library to interact with L<LCDproc|http://lcdproc.sourceforge.net/>
+
+=head1 SYNOPSIS
+
+    $lcdproc = Net::LCDproc->new();
+    $lcdproc->init;
+    $screen = Net::LCDproc::Screen->new( id => "main" );
+
+    my $title = Net::LCDproc::Widget::Title->new( id => "title" );
+    $title->text('My Screen Title');
+    $lcdproc->add_screen($screen);
+
+    $screen->set( 'name',      "Test Screen" );
+    $screen->set( 'heartbeat', "off" );
+
+    $screen->add_widget($title);
+
+    my $wdgt = Net::LCDproc::Widget::String->new(
+        id   => "wdgt",
+        x    => 1,
+        y    => 2,
+        text => "Some Text",
+    );
+
+    $screen->add_widget($wdgt);
+
+    while (1) {
+        # update your widgets..
+        $lcdproc->update();
+        sleep(1);
+    }
+
+=head1 INSTALLATION
+
+    git clone http://github.com/ioanrogers/net-lcdproc.git
+    cd net-lcdproc
+    dzil install
+
+=head1 LICENSE
+
+This software is Copyright (c) 2010 by Ioan Rogers.
+
+This is free software, licensed under:
+
+  The Artistic License 2.0
+
+=cut
+
