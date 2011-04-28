@@ -82,8 +82,9 @@ sub send_cmd {
     }
 
     my $response = $self->_handle_response;
+
     #if (ref $response eq 'Array') {
-    return $response;   
+    return $response;
 
 }
 
@@ -131,6 +132,7 @@ sub _handle_response {
             return 1;
         };
         default {
+
             # don't care about listen or ignore
             # so find something useful to return
             # FIXME: start caring! Then only update the server when

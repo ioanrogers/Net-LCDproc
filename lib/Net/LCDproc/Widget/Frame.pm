@@ -7,7 +7,6 @@ extends 'Net::LCDproc::Widget';
 
 use namespace::autoclean;
 
-
 no Moose;
 
 __PACKAGE__->meta->make_immutable;

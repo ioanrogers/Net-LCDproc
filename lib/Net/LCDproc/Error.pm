@@ -38,10 +38,10 @@ sub dump {
 }
 
 sub throwf {
-    my $self = shift;
+    my $self    = shift;
     my $msg_str = shift;
-    my @args = @_;
-    
+    my @args    = @_;
+
     $self->throw( sprintf $msg_str, @args );
 }
 

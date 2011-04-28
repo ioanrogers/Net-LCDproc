@@ -9,7 +9,7 @@ use namespace::autoclean;
 
 sub BUILD {
     my $self = shift;
-    $self->_set_cmd( [ qw/ text /])
+    $self->_set_cmd( [qw/ text /] );
 }
 
 has type => (
@@ -19,12 +19,12 @@ has type => (
 );
 
 has text => (
-    is      => 'rw',
-    isa     => 'Str',
+    is       => 'rw',
+    isa      => 'Str',
     required => 1,
     lazy     => 1,
     default  => '',
-    trigger => sub {
+    trigger  => sub {
         $_[0]->has_changed;
     },
 );
