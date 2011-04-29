@@ -7,9 +7,10 @@ use Moose;
 use Net::LCDproc::Error;
 use Net::LCDproc::Net;
 use Log::Any qw($log);
+use Readonly;
 use namespace::autoclean;
 
-use constant PROTOCOL_VERSION => 0.3;
+Readonly my $PROTOCOL_VERSION => 0.3;
 
 has server => (
     is       => 'ro',
@@ -70,7 +71,7 @@ sub remove_screen {
     my $i = 0;
     foreach my $s ( @{ $self->screens } ) {
         if ( $s == $screen ) {
-            $log->debug("Removing $s") if $log->is_debug;
+            if ( $log->is_debug ) { $log->debug("Removing $s") };
             splice @{ $self->screens }, $i, 1;
             return 1;
         }
@@ -106,20 +107,21 @@ sub _send_hello {
     my $response = $self->_conn->send_cmd('hello');
 
     if ( !ref $response eq 'ARRAY' ) {
-        Net::LCDproc::Error->throw("Failed to read connect string");
+        Net::LCDproc::Error->throw('Failed to read connect string');
     }
     my $proto = $response->[1];
 
     $log->infof( 'Connected to LCDproc version %s, proto %s', $response->[0], $proto );
-    if ( $proto != PROTOCOL_VERSION ) {
-        Net::LCDproc::Error->throwf( "Unsupported protocol version. Available: %s Supported: %s",
-            $proto, PROTOCOL_VERSION );
+    if ( $proto != $PROTOCOL_VERSION ) {
+        Net::LCDproc::Error->throwf( 'Unsupported protocol version. Available: %s Supported: %s',
+            $proto, $PROTOCOL_VERSION );
     }
+    ## no critic (ProhibitMagicNumbers)
     $self->width( $response->[2] );
     $self->height( $response->[3] );
     $self->cell_width( $response->[4] );
     $self->cell_height( $response->[5] );
-
+    ## use critic
     return 1;
 }
 
@@ -131,9 +133,11 @@ __PACKAGE__->meta->make_immutable;
 
 __END__
 
+=for stopwords LCDproc Ioan
+ 
 =head1 NAME
 
-B<Net::LCDproc>
+Net::LCDproc
 
 =head1 DESCRIPTION
 
@@ -171,13 +175,17 @@ Client library to interact with L<LCDproc|http://lcdproc.sourceforge.net/>
 
 =head1 INSTALLATION
 
-    git clone http://github.com/ioanrogers/net-lcdproc.git
+    git clone git://github.com/ioanrogers/net-lcdproc.git
     cd net-lcdproc
     dzil install
 
-=head1 LICENSE
+=head1 AUTHOR
 
-This software is Copyright (c) 2010 by Ioan Rogers.
+Ioan Rogers <ioan.rogers@gmail.com>
+
+=head1 LICENSE AND COPYRIGHT
+
+This software is Copyright (c) 2010-11 by Ioan Rogers.
 
 This is free software, licensed under:
 

@@ -40,7 +40,7 @@ sub get_date_time {
     return ( $dt->hms, $date_str );
 }
 
-sub add_hdd_widgets {
+sub add_widgets {
 
     my %widgets;
 
@@ -70,7 +70,7 @@ sub add_hdd_widgets {
 }
 
 setup_lcdproc_screen();
-my $widgets = add_hdd_widgets();
+my $widgets = add_widgets();
 
 while (1) {
 
@@ -85,3 +85,4 @@ while (1) {
     $lcdproc->update();
     sleep(1);
 }
+

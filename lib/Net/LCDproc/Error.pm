@@ -50,6 +50,10 @@ __PACKAGE__->meta->make_immutable( inline_constructor => 0 );
 
 1;
 
+__END__
+
+=for stopwords LCDproc Ioan stringified
+
 =pod
 
 =head1 NAME

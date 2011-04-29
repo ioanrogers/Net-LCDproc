@@ -5,8 +5,9 @@ use Moose;
 use Net::LCDproc::Error;
 use Log::Any qw($log);
 use IO::Socket::INET;
+use Readonly;
 
-use constant MAX_DATA_READ => 4096;
+Readonly my $MAX_DATA_READ => 4096;
 
 sub DEMOLISH {
     my $self = shift;
@@ -76,7 +77,7 @@ sub send_cmd {
 
     $log->debug("Sending '$cmd'") if $log->is_debug;
 
-    my $ret = $self->socket->send($cmd);
+    my $ret = $self->socket->send($cmd . "\n");
     if ( !defined $ret ) {
         Net::LCDproc::Error->throw("Error sending cmd '$cmd': $!");
     }
@@ -90,7 +91,7 @@ sub send_cmd {
 
 sub recv_response {
     my $self = shift;
-    $self->socket->recv( my $response, MAX_DATA_READ );
+    $self->socket->recv( my $response, $MAX_DATA_READ );
 
     if ( !defined $response ) {
         Net::LCDproc::Error->throw("No response from lcdproc: $!");

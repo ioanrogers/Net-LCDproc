@@ -120,7 +120,7 @@ has _conn => (
 sub set {
     my ( $self, $attr_name, $new_val ) = @_;
 
-    $log->debugf( "Setting %s: '%s'", $attr_name, $new_val ) if $log->is_debug;
+    if ( $log->is_debug ) { $log->debugf( 'Setting %s: [%s]', $attr_name, $new_val ) }
     my $attr = $self->meta->get_attribute($attr_name);
     $attr->set_value( $self, $new_val );
     $attr->is_changed;
@@ -134,7 +134,7 @@ sub update {
     if ( $self->is_new ) {
 
         # screen needs to be added
-        $log->debug( 'Adding ' . $self->id ) if $log->is_debug;
+        if ( $log->is_debug ) { $log->debug( 'Adding ' . $self->id ) }
         $self->_conn->send_cmd( 'screen_add ' . $self->id );
         $self->added;
     }
@@ -144,7 +144,7 @@ sub update {
     my $changes = $self->_list_changes();
 
     if ($changes) {
-        $log->debug( 'Updating screen: ' . $self->id ) if $log->is_debug;
+        if ( $log->is_debug ) { $log->debug( 'Updating screen: ' . $self->id ) }
         foreach my $attr_name ( @{$changes} ) {
 
             my $cmd_str = $self->_get_cmd_str_for($attr_name);
@@ -225,3 +225,33 @@ no Moose;
 __PACKAGE__->meta->make_immutable;
 
 1;
+
+__END__
+
+=for stopwords LCDproc Ioan
+
+=head1 NAME
+
+Net::LCDproc::Screen
+
+=head1 DESCRIPTION
+
+Represents a an LCDproc screen
+
+=head1 SYNOPSIS
+
+
+=head1 AUTHOR
+
+Ioan Rogers <ioan.rogers@gmail.com>
+
+=head1 LICENSE AND COPYRIGHT
+
+This software is Copyright (c) 2010-11 by Ioan Rogers.
+
+This is free software, licensed under:
+
+  The Artistic License 2.0
+
+=cut
+
