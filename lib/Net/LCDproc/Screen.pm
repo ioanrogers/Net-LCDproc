@@ -24,16 +24,9 @@ has name => (
     cmd_str => '-name',
 );
 
-has width => (
+has [ 'width', 'height' . 'duration', 'timeout', 'cursor_x', 'cursor_y' ] => (
     traits  => ['LCDprocScreen'],
     is      => 'ro',
-    isa     => 'Int',
-    changed => 0,
-);
-
-has height => (
-    traits  => ['LCDprocScreen'],
-    is      => 'rw',
     isa     => 'Int',
     changed => 0,
 );
@@ -60,38 +53,10 @@ has backlight => (
     changed => 0,
 );
 
-has duration => (
-    traits  => ['LCDprocScreen'],
-    is      => 'ro',
-    isa     => 'Int',
-    changed => 0,
-);
-
-has timeout => (
-    traits  => ['LCDprocScreen'],
-    is      => 'ro',
-    isa     => 'Int',
-    changed => 0,
-);
-
 has cursor => (
     traits  => ['LCDprocScreen'],
     is      => 'ro',
     isa     => enum( [qw[on off under block]] ),
-    changed => 0,
-);
-
-has cursor_x => (
-    traits  => ['LCDprocScreen'],
-    is      => 'ro',
-    isa     => 'Int',
-    changed => 0,
-);
-
-has cursor_y => (
-    traits  => ['LCDprocScreen'],
-    is      => 'ro',
-    isa     => 'Int',
     changed => 0,
 );
 

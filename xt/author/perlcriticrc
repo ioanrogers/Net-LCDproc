@@ -15,4 +15,7 @@ lib_sections    = NAME | SYNOPSIS | AUTHOR | VERSION | LICENSE AND COPYRIGHT
 
 # dzil puts begin block before strictures. Using moose anyway
 [-TestingAndDebugging::RequireUseStrict]
- 
+
+# allowing ifs because I prefer it for debug logging
+[ControlStructures::ProhibitPostfixControls]
+allow = if

@@ -77,7 +77,7 @@ sub send_cmd {
 
     $log->debug("Sending '$cmd'") if $log->is_debug;
 
-    my $ret = $self->socket->send($cmd . "\n");
+    my $ret = $self->socket->send( $cmd . "\n" );
     if ( !defined $ret ) {
         Net::LCDproc::Error->throw("Error sending cmd '$cmd': $!");
     }

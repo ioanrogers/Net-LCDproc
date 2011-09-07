@@ -12,6 +12,13 @@ has id => (
     required => 1,
 );
 
+has type => (
+    is      => 'ro',
+    isa     => 'Str',
+    writer  => '_set_type',
+    default => 'string',
+);
+
 has frame => (
     is  => 'ro',
     isa => 'Net::LCDproc::Widget::Frame',
@@ -57,7 +64,7 @@ has _set_cmd => (
 sub set {
     my ( $self, $attr_name, $new_val ) = @_;
 
-    if ($log->is_debug) { $log->debugf( 'Setting %s: "%s"', $attr_name, $new_val ) };
+    $log->debugf( 'Setting %s: "%s"', $attr_name, $new_val ) if $log->is_debug;
     my $attr = $self->meta->get_attribute($attr_name);
     $attr->set_value( $self, $new_val );
     $self->is_changed;
@@ -77,7 +84,7 @@ sub update {
     if ( !$self->changed ) {
         return;
     }
-    if ($log->is_debug) {$log->debug( 'Updating widget: ' . $self->id ) };
+    $log->debug( 'Updating widget: ' . $self->id ) if $log->is_debug;
     my $cmd_str = $self->_get_set_cmd_str;
 
     $self->_conn->send_cmd($cmd_str);
@@ -120,7 +127,7 @@ sub _get_set_cmd_str {
 
 sub _create_widget_on_server {
     my $self = shift;
-    if ($log->is_debug) { $log->debugf( 'Adding new widget: %s - %s', $self->id, $self->type ) };
+    $log->debugf( 'Adding new widget: %s - %s', $self->id, $self->type ) if $log->is_debug;
     $self->_conn->send_cmd( sprintf 'widget_add %s %s %s',
         $self->screen->id, $self->id, $self->type );
 
@@ -132,7 +139,6 @@ sub _create_widget_on_server {
 }
 
 no Moose;
-
 __PACKAGE__->meta->make_immutable;
 
 1;
@@ -165,4 +171,3 @@ This is free software, licensed under:
   The Artistic License 2.0
 
 =cut
-
