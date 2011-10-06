@@ -3,3 +3,4 @@ Net-LCDproc-*
 debian/libnet-lcdproc-perl*
 .build
 .DS_Store
+libnet-lcdproc-perl*
