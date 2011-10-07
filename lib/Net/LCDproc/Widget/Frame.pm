@@ -1,5 +1,7 @@
 package Net::LCDproc::Widget::Frame;
 
+# ABSTRACT: 'frame' widget
+
 use v5.10.0;
 use Moose;
 use Moose::Util::TypeConstraints;

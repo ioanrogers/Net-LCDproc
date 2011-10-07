@@ -1,5 +1,7 @@
 package Net::LCDproc::Widget;
 
+# ABSTRACT: Base class for widgets
+
 use 5.0100;
 use Moose;
 use Log::Any qw($log);
@@ -147,27 +149,3 @@ __END__
 
 =for stopwords LCDproc Ioan
 
-=head1 NAME
-
-Net::LCDproc::Widget
-
-=head1 DESCRIPTION
-
-Base class for widgets
-
-=head1 SYNOPSIS
-
-
-=head1 AUTHOR
-
-Ioan Rogers <ioan.rogers@gmail.com>
-
-=head1 LICENSE AND COPYRIGHT
-
-This software is Copyright (c) 2010-11 by Ioan Rogers.
-
-This is free software, licensed under:
-
-  The Artistic License 2.0
-
-=cut

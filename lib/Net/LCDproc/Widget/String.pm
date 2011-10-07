@@ -1,5 +1,7 @@
 package Net::LCDproc::Widget::String;
 
+# ABSTRACT: 'string' widget
+
 use 5.0100;
 use Moose;
 

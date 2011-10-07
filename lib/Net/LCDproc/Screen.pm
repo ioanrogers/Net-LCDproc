@@ -1,5 +1,7 @@
 package Net::LCDproc::Screen;
 
+# ABSTRACT: Represents a an LCDproc screen
+
 use 5.0100;
 use Moose;
 use Moose::Util::TypeConstraints;
@@ -195,28 +197,4 @@ __END__
 
 =for stopwords LCDproc Ioan
 
-=head1 NAME
-
-Net::LCDproc::Screen
-
-=head1 DESCRIPTION
-
-Represents a an LCDproc screen
-
-=head1 SYNOPSIS
-
-
-=head1 AUTHOR
-
-Ioan Rogers <ioan.rogers@gmail.com>
-
-=head1 LICENSE AND COPYRIGHT
-
-This software is Copyright (c) 2010-11 by Ioan Rogers.
-
-This is free software, licensed under:
-
-  The Artistic License 2.0
-
-=cut
 

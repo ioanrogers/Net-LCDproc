@@ -1,5 +1,7 @@
 package Net::LCDproc::Error;
 
+# ABSTRACT: throw errors
+
 use 5.010;
 use Moose;
 extends qw/Throwable::Error/;

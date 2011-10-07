@@ -1,5 +1,7 @@
 package Net::LCDproc::Net;
 
+# ABSTRACT: Handles the network connection to LCDd server
+
 use 5.0100;
 use Moose;
 use Net::LCDproc::Error;

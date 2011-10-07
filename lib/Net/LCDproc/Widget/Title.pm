@@ -1,5 +1,7 @@
 package Net::LCDproc::Widget::Title;
 
+# ABSTRACT: the 'title' widget
+
 use v5.10.0;
 use Moose;
 
