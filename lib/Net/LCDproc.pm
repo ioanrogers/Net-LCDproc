@@ -1,6 +1,6 @@
 package Net::LCDproc;
 
-# ABSTRACT: LCDproc client library
+# ABSTRACT: Client library to interact with L<LCDproc|http://lcdproc.sourceforge.net/>
 
 use 5.0100;
 use Moose;
@@ -120,14 +120,6 @@ __END__
 
 =for stopwords LCDproc Ioan
  
-=head1 NAME
-
-Net::LCDproc
-
-=head1 DESCRIPTION
-
-Client library to interact with L<LCDproc|http://lcdproc.sourceforge.net/>
-
 =head1 SYNOPSIS
 
     $lcdproc = Net::LCDproc->new();

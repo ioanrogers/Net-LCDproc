@@ -31,7 +31,7 @@ has screen => (
 
 has _conn => (
     is       => 'rw',
-    isa      => 'Net::LCDproc::Error | Net::LCDproc::Net',
+    isa      => 'Net::LCDproc::Net',
     required => 0,
 );
 

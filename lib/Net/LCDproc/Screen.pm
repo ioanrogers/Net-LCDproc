@@ -78,7 +78,7 @@ has is_new => (
 
 has _conn => (
     is  => 'rw',
-    isa => 'Net::LCDproc::Error | Net::LCDproc::Net',
+    isa => 'Net::LCDproc::Net',
 );
 
 ### Public Methods

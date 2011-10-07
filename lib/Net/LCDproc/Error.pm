@@ -1,19 +1,18 @@
 package Net::LCDproc::Error;
 
 use 5.010;
-
 use Moose;
-extends 'Throwable::Error';
+extends qw/Throwable::Error/;
 
 use Data::Dumper qw//;
-
 use namespace::autoclean;
 
 has class_name => (
-    is       => 'ro',
+    is       => 'rw',
     isa      => 'Str',
     required => 1,
     default  => sub { caller(11) },    # XXX: this seems fragile
+
 );
 
 has object => (
@@ -29,6 +28,7 @@ sub short_msg {
 
 sub dump {
     my $self = shift;
+    
     if ( $self->has_object ) {
         $Data::Dumper::Terse = 1;
         return Data::Dumper->Dump( [ $self->object ] );
@@ -41,8 +41,7 @@ sub throwf {
     my $self    = shift;
     my $msg_str = shift;
     my @args    = @_;
-
-    $self->throw( sprintf $msg_str, @args );
+    $self->throw( message => sprintf $msg_str, @args );
 }
 
 no Moose;
@@ -50,15 +49,7 @@ __PACKAGE__->meta->make_immutable( inline_constructor => 0 );
 
 1;
 
-__END__
-
-=for stopwords LCDproc Ioan stringified
-
 =pod
-
-=head1 NAME
-
-Net::LCDproc::Error
 
 =head1 SYNOPSIS
 
@@ -87,9 +78,11 @@ When C<Net::LCDproc> encounters an error, it will throw an exception you can cat
 By default C<Throwable::Error> will provide the error message with a stack trace.
 This module offers a few other options for you to choose from.
 
+=for stopwords LCDproc Ioan stringified
+
 =head1 ATTRIBUTES
 
-=over 
+=over
 
 =item C<class_name>
 
@@ -120,4 +113,4 @@ isn't set, returns a string saying so.
 
 L<Throwable::Error|Throwable::Error>
 
-=cut
+__END__
