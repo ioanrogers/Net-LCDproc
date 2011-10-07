@@ -1,0 +1,9 @@
+=head1 Net::LCDproc
+
+Client library for communicating with an LCDproc server
+
+=head1 INSTALLATION
+
+    git clone git://github.com/ioanrogers/net-lcdproc.git
+    cd net-lcdproc
+    dzil install
