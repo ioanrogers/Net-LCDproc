@@ -1,15 +1,23 @@
 package Net::LCDproc::Widget;
 
-use 5.0100;
+#ABSTRACT: Base class for all the widgets
+
+use v5.10;
 use Moose;
 use Log::Any qw($log);
-
 use namespace::autoclean;
 
 has id => (
     is       => 'ro',
     isa      => 'Str',
     required => 1,
+);
+
+has type => (
+    is      => 'ro',
+    isa     => 'Str',
+    writer  => '_set_type',
+    default => 'string',
 );
 
 has frame => (
@@ -24,7 +32,7 @@ has screen => (
 
 has _conn => (
     is       => 'rw',
-    isa      => 'Net::LCDproc::Error | Net::LCDproc::Net',
+    isa      => 'Net::LCDproc::Net',
     required => 0,
 );
 
@@ -57,7 +65,7 @@ has _set_cmd => (
 sub set {
     my ( $self, $attr_name, $new_val ) = @_;
 
-    if ($log->is_debug) { $log->debugf( 'Setting %s: "%s"', $attr_name, $new_val ) };
+    $log->debugf( 'Setting %s: "%s"', $attr_name, $new_val ) if $log->is_debug;
     my $attr = $self->meta->get_attribute($attr_name);
     $attr->set_value( $self, $new_val );
     $self->is_changed;
@@ -77,7 +85,7 @@ sub update {
     if ( !$self->changed ) {
         return;
     }
-    if ($log->is_debug) {$log->debug( 'Updating widget: ' . $self->id ) };
+    $log->debug( 'Updating widget: ' . $self->id ) if $log->is_debug;
     my $cmd_str = $self->_get_set_cmd_str;
 
     $self->_conn->send_cmd($cmd_str);
@@ -120,7 +128,7 @@ sub _get_set_cmd_str {
 
 sub _create_widget_on_server {
     my $self = shift;
-    if ($log->is_debug) { $log->debugf( 'Adding new widget: %s - %s', $self->id, $self->type ) };
+    $log->debugf( 'Adding new widget: %s - %s', $self->id, $self->type ) if $log->is_debug;
     $self->_conn->send_cmd( sprintf 'widget_add %s %s %s',
         $self->screen->id, $self->id, $self->type );
 
@@ -131,38 +139,6 @@ sub _create_widget_on_server {
     return 1;
 }
 
-no Moose;
-
 __PACKAGE__->meta->make_immutable;
 
 1;
-
-__END__
-
-=for stopwords LCDproc Ioan
-
-=head1 NAME
-
-Net::LCDproc::Widget
-
-=head1 DESCRIPTION
-
-Base class for widgets
-
-=head1 SYNOPSIS
-
-
-=head1 AUTHOR
-
-Ioan Rogers <ioan.rogers@gmail.com>
-
-=head1 LICENSE AND COPYRIGHT
-
-This software is Copyright (c) 2010-11 by Ioan Rogers.
-
-This is free software, licensed under:
-
-  The Artistic License 2.0
-
-=cut
-

@@ -1,8 +1,8 @@
 package Net::LCDproc;
 
-# ABSTRACT: LCDproc client library
+# ABSTRACT: Client library to interact with L<LCDproc|http://lcdproc.sourceforge.net/>
 
-use 5.0100;
+use v5.10;
 use Moose;
 use Net::LCDproc::Error;
 use Net::LCDproc::Net;
@@ -26,22 +26,7 @@ has port => (
     default  => 13666,
 );
 
-has width => (
-    is  => 'rw',
-    isa => 'Int',
-);
-
-has height => (
-    is  => 'rw',
-    isa => 'Int',
-);
-
-has cell_width => (
-    is  => 'rw',
-    isa => 'Int',
-);
-
-has cell_height => (
+has [ 'width', 'height', 'cell_width', 'cell_height' ] => (
     is  => 'rw',
     isa => 'Int',
 );
@@ -71,7 +56,7 @@ sub remove_screen {
     my $i = 0;
     foreach my $s ( @{ $self->screens } ) {
         if ( $s == $screen ) {
-            if ( $log->is_debug ) { $log->debug("Removing $s") };
+            $log->debug("Removing $s") if $log->is_debug;
             splice @{ $self->screens }, $i, 1;
             return 1;
         }
@@ -125,23 +110,11 @@ sub _send_hello {
     return 1;
 }
 
-no Moose;
-
 __PACKAGE__->meta->make_immutable;
 
 1;
 
 __END__
-
-=for stopwords LCDproc Ioan
- 
-=head1 NAME
-
-Net::LCDproc
-
-=head1 DESCRIPTION
-
-Client library to interact with L<LCDproc|http://lcdproc.sourceforge.net/>
 
 =head1 SYNOPSIS
 
@@ -178,18 +151,4 @@ Client library to interact with L<LCDproc|http://lcdproc.sourceforge.net/>
     git clone git://github.com/ioanrogers/net-lcdproc.git
     cd net-lcdproc
     dzil install
-
-=head1 AUTHOR
-
-Ioan Rogers <ioan.rogers@gmail.com>
-
-=head1 LICENSE AND COPYRIGHT
-
-This software is Copyright (c) 2010-11 by Ioan Rogers.
-
-This is free software, licensed under:
-
-  The Artistic License 2.0
-
-=cut
 

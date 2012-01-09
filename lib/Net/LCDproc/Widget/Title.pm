@@ -1,11 +1,12 @@
 package Net::LCDproc::Widget::Title;
 
-use v5.10.0;
+#ABSTRACT: 'title' widget
+
+use v5.10;
 use Moose;
+use namespace::autoclean;
 
 extends 'Net::LCDproc::Widget';
-
-use namespace::autoclean;
 
 sub BUILD {
     my $self = shift;
@@ -28,8 +29,6 @@ has text => (
         $_[0]->has_changed;
     },
 );
-
-no Moose;
 
 __PACKAGE__->meta->make_immutable;
 

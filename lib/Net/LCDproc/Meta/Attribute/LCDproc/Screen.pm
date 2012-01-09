@@ -1,6 +1,6 @@
 package Net::LCDproc::Meta::Attribute::LCDproc::Screen;
 
-use 5.0100;
+use v5.10;
 use Moose::Role;
 use Moose::Util::TypeConstraints;
 
@@ -20,11 +20,7 @@ has cmd_str => (
     predicate => 'has_cmd_str',
 );
 
-no Moose::Util::TypeConstraints;
-no Moose::Role;
-
 package Moose::Meta::Attribute::Custom::Trait::LCDprocScreen;
-
 sub register_implementation { 'Net::LCDproc::Meta::Attribute::LCDproc::Screen' }
 
 1;

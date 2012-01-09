@@ -1,13 +1,14 @@
 package Net::LCDproc::Error;
 
-use 5.010;
+#ABSTRACT: Error class
+
+use v5.10;
 
 use Moose;
-extends 'Throwable::Error';
-
 use Data::Dumper qw//;
-
 use namespace::autoclean;
+
+extends 'Throwable::Error';
 
 has class_name => (
     is       => 'ro',
@@ -45,20 +46,11 @@ sub throwf {
     $self->throw( sprintf $msg_str, @args );
 }
 
-no Moose;
 __PACKAGE__->meta->make_immutable( inline_constructor => 0 );
 
 1;
 
 __END__
-
-=for stopwords LCDproc Ioan stringified
-
-=pod
-
-=head1 NAME
-
-Net::LCDproc::Error
 
 =head1 SYNOPSIS
 
@@ -120,4 +112,3 @@ isn't set, returns a string saying so.
 
 L<Throwable::Error|Throwable::Error>
 
-=cut

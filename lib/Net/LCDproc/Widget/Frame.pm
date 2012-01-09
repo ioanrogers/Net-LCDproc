@@ -1,15 +1,13 @@
 package Net::LCDproc::Widget::Frame;
 
-use v5.10.0;
+#ABSTRACT: The 'frame' widget, a screen within a screen
+
+use v5.10;
 use Moose;
 use Moose::Util::TypeConstraints;
-extends 'Net::LCDproc::Widget';
-
 use namespace::autoclean;
-
-no Moose;
+extends 'Net::LCDproc::Widget';
 
 __PACKAGE__->meta->make_immutable;
 
 1;
-

@@ -1,11 +1,14 @@
 package Net::LCDproc::Net;
 
-use 5.0100;
+# ABSTRACT: Handles network communication
+
+use v5.10;
 use Moose;
 use Net::LCDproc::Error;
 use Log::Any qw($log);
 use IO::Socket::INET;
 use Readonly;
+use namespace::autoclean;
 
 Readonly my $MAX_DATA_READ => 4096;
 
@@ -77,7 +80,7 @@ sub send_cmd {
 
     $log->debug("Sending '$cmd'") if $log->is_debug;
 
-    my $ret = $self->socket->send($cmd . "\n");
+    my $ret = $self->socket->send( $cmd . "\n" );
     if ( !defined $ret ) {
         Net::LCDproc::Error->throw("Error sending cmd '$cmd': $!");
     }
@@ -143,5 +146,7 @@ sub _handle_response {
     };
 
 }
+
+__PACKAGE__->meta->make_immutable;
 
 1;

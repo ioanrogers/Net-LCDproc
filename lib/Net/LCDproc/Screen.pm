@@ -1,14 +1,15 @@
 package Net::LCDproc::Screen;
 
-use 5.0100;
+#ABSTRACT: represents an LCDproc screen
+
+use v5.10;
 use Moose;
 use Moose::Util::TypeConstraints;
 use Log::Any qw($log);
+use Net::LCDproc::Net;
 use namespace::autoclean;
 
 with 'Net::LCDproc::Meta::Attribute::LCDproc::Screen';
-
-use Net::LCDproc::Net;
 
 has id => (
     is       => 'ro',
@@ -24,16 +25,9 @@ has name => (
     cmd_str => '-name',
 );
 
-has width => (
+has [ 'width', 'height' . 'duration', 'timeout', 'cursor_x', 'cursor_y' ] => (
     traits  => ['LCDprocScreen'],
     is      => 'ro',
-    isa     => 'Int',
-    changed => 0,
-);
-
-has height => (
-    traits  => ['LCDprocScreen'],
-    is      => 'rw',
     isa     => 'Int',
     changed => 0,
 );
@@ -60,38 +54,10 @@ has backlight => (
     changed => 0,
 );
 
-has duration => (
-    traits  => ['LCDprocScreen'],
-    is      => 'ro',
-    isa     => 'Int',
-    changed => 0,
-);
-
-has timeout => (
-    traits  => ['LCDprocScreen'],
-    is      => 'ro',
-    isa     => 'Int',
-    changed => 0,
-);
-
 has cursor => (
     traits  => ['LCDprocScreen'],
     is      => 'ro',
     isa     => enum( [qw[on off under block]] ),
-    changed => 0,
-);
-
-has cursor_x => (
-    traits  => ['LCDprocScreen'],
-    is      => 'ro',
-    isa     => 'Int',
-    changed => 0,
-);
-
-has cursor_y => (
-    traits  => ['LCDprocScreen'],
-    is      => 'ro',
-    isa     => 'Int',
     changed => 0,
 );
 
@@ -113,7 +79,7 @@ has is_new => (
 
 has _conn => (
     is  => 'rw',
-    isa => 'Net::LCDproc::Error | Net::LCDproc::Net',
+    isa => 'Net::LCDproc::Net',
 );
 
 ### Public Methods
@@ -220,38 +186,7 @@ sub _list_changes {
     return \@changes;
 }
 
-no Moose;
-
 __PACKAGE__->meta->make_immutable;
 
 1;
-
-__END__
-
-=for stopwords LCDproc Ioan
-
-=head1 NAME
-
-Net::LCDproc::Screen
-
-=head1 DESCRIPTION
-
-Represents a an LCDproc screen
-
-=head1 SYNOPSIS
-
-
-=head1 AUTHOR
-
-Ioan Rogers <ioan.rogers@gmail.com>
-
-=head1 LICENSE AND COPYRIGHT
-
-This software is Copyright (c) 2010-11 by Ioan Rogers.
-
-This is free software, licensed under:
-
-  The Artistic License 2.0
-
-=cut
 
