@@ -1,8 +1,9 @@
 package Net::LCDproc::Net;
 
-# ABSTRACT: Handles network communication
+#ABSTRACT: Handles network communication to LCDd server
 
 use v5.10;
+
 use Moose;
 use Net::LCDproc::Error;
 use Log::Any qw($log);

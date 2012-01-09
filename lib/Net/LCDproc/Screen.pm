@@ -189,4 +189,3 @@ sub _list_changes {
 __PACKAGE__->meta->make_immutable;
 
 1;
-

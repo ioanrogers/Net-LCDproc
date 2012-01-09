@@ -3,7 +3,6 @@ package Net::LCDproc::Error;
 #ABSTRACT: Error class
 
 use v5.10;
-
 use Moose;
 use Data::Dumper qw//;
 use namespace::autoclean;
@@ -11,10 +10,11 @@ use namespace::autoclean;
 extends 'Throwable::Error';
 
 has class_name => (
-    is       => 'ro',
+    is       => 'rw',
     isa      => 'Str',
     required => 1,
     default  => sub { caller(11) },    # XXX: this seems fragile
+
 );
 
 has object => (
@@ -30,6 +30,7 @@ sub short_msg {
 
 sub dump {
     my $self = shift;
+    
     if ( $self->has_object ) {
         $Data::Dumper::Terse = 1;
         return Data::Dumper->Dump( [ $self->object ] );
@@ -42,15 +43,12 @@ sub throwf {
     my $self    = shift;
     my $msg_str = shift;
     my @args    = @_;
-
-    $self->throw( sprintf $msg_str, @args );
+    $self->throw( message => sprintf $msg_str, @args );
 }
 
 __PACKAGE__->meta->make_immutable( inline_constructor => 0 );
 
 1;
-
-__END__
 
 =head1 SYNOPSIS
 
@@ -81,7 +79,7 @@ This module offers a few other options for you to choose from.
 
 =head1 ATTRIBUTES
 
-=over 
+=over
 
 =item C<class_name>
 
@@ -111,4 +109,3 @@ isn't set, returns a string saying so.
 =head1 SEE ALSO
 
 L<Throwable::Error|Throwable::Error>
-

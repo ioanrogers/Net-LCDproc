@@ -1,6 +1,6 @@
 package Net::LCDproc;
 
-# ABSTRACT: Client library to interact with L<LCDproc|http://lcdproc.sourceforge.net/>
+#ABSTRACT: Client library to interact with L<LCDproc|http://lcdproc.sourceforge.net/>
 
 use v5.10;
 use Moose;
@@ -151,4 +151,3 @@ __END__
     git clone git://github.com/ioanrogers/net-lcdproc.git
     cd net-lcdproc
     dzil install
-
