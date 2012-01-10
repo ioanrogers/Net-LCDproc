@@ -6,7 +6,6 @@ use v5.10;
 use Moose;
 use Moose::Util::TypeConstraints;
 use Log::Any qw($log);
-use Net::LCDproc::Net;
 use namespace::autoclean;
 
 with 'Net::LCDproc::Meta::Attribute::LCDproc::Screen';
@@ -77,9 +76,9 @@ has is_new => (
     handles  => { added => 'unset', },
 );
 
-has _conn => (
+has _lcdproc => (
     is  => 'rw',
-    isa => 'Net::LCDproc::Net',
+    isa => 'Net::LCDproc',
 );
 
 ### Public Methods
@@ -101,13 +100,13 @@ sub update {
 
         # screen needs to be added
         if ( $log->is_debug ) { $log->debug( 'Adding ' . $self->id ) }
-        $self->_conn->send_cmd( 'screen_add ' . $self->id );
+        $self->_lcdproc->_send_cmd( 'screen_add ' . $self->id );
         $self->added;
     }
 
     # even if the screen was new, we leave defaults up to the LCDproc server
     # so nothing *has* to be set
-    my $changes = $self->_list_changes();
+    my $changes = $self->_list_changes;
 
     if ($changes) {
         if ( $log->is_debug ) { $log->debug( 'Updating screen: ' . $self->id ) }
@@ -115,7 +114,7 @@ sub update {
 
             my $cmd_str = $self->_get_cmd_str_for($attr_name);
 
-            $self->_conn->send_cmd($cmd_str);
+            $self->_lcdproc->_send_cmd($cmd_str);
 
             my $attr = $self->meta->get_attribute($attr_name);
             $attr->change_updated;
@@ -124,7 +123,7 @@ sub update {
 
     # now check the the widgets attached to this screen
     foreach my $widget ( @{ $self->widgets } ) {
-        $widget->update();
+        $widget->update;
     }
     return 1;
 }
@@ -133,7 +132,6 @@ sub update {
 sub add_widget {
     my ( $self, $widget ) = @_;
     $widget->screen($self);
-    $widget->_conn( $self->_conn );
     push @{ $self->widgets }, $widget;
     return 1;
 }

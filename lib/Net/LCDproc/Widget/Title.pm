@@ -8,27 +8,23 @@ use namespace::autoclean;
 
 extends 'Net::LCDproc::Widget';
 
-sub BUILD {
-    my $self = shift;
-    $self->_set_cmd( [qw/ text /] );
-    return 1;
-}
-
-has type => (
-    is      => 'ro',
-    isa     => 'Str',
-    default => 'title',
-);
-
 has text => (
     is       => 'rw',
     isa      => 'Str',
     required => 1,
     lazy     => 1,
-    default  => qw//,
+    default  => q{},
     trigger  => sub {
         $_[0]->has_changed;
     },
+);
+
+has '+type' => (
+    default => 'title',
+);
+
+has '+_set_cmd' => (
+    default => sub {[qw/ text /]},
 );
 
 __PACKAGE__->meta->make_immutable;

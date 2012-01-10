@@ -8,18 +8,11 @@ use namespace::autoclean;
 
 extends 'Net::LCDproc::Widget';
 
-sub BUILD {
-    my $self = shift;
-    # $self->_set_type( 'string' ); # TODO: get type from lc packagename
-    $self->_set_cmd( [qw/ x y text /] );
-    return 1;
-}
-
 has text => (
     is       => 'rw',
     isa      => 'Str',
     required => 1,
-    default  => qw//,
+    default  => q{},
     trigger  => sub {
         $_[0]->has_changed;
     },
@@ -33,6 +26,14 @@ has [ 'x', 'y' ] => (
     trigger  => sub {
         $_[0]->has_changed;
     },
+);
+
+has '+type' => (
+    default => 'string',
+);
+
+has '+_set_cmd' => (
+    default => sub {[qw/ x y text /]},
 );
 
 __PACKAGE__->meta->make_immutable;

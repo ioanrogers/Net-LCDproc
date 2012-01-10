@@ -16,8 +16,6 @@ has id => (
 has type => (
     is      => 'ro',
     isa     => 'Str',
-    writer  => '_set_type',
-    default => 'string',
 );
 
 has frame => (
@@ -28,12 +26,6 @@ has frame => (
 has screen => (
     is  => 'rw',
     isa => 'Net::LCDproc::Screen',
-);
-
-has _conn => (
-    is       => 'rw',
-    isa      => 'Net::LCDproc::Net',
-    required => 0,
 );
 
 has is_new => (
@@ -58,6 +50,8 @@ has changed => (
 has _set_cmd => (
     is  => 'rw',
     isa => 'ArrayRef',
+    required => 1,
+    default => sub {[]},
 );
 
 ### Public Methods
@@ -88,7 +82,7 @@ sub update {
     $log->debug( 'Updating widget: ' . $self->id ) if $log->is_debug;
     my $cmd_str = $self->_get_set_cmd_str;
 
-    $self->_conn->send_cmd($cmd_str);
+    $self->screen->_lcdproc->_send_cmd($cmd_str);
 
     $self->change_updated;
     return 1;
@@ -99,7 +93,7 @@ sub remove {
     my $self = shift;
 
     my $cmd_str = sprintf 'widget_del %s %s', $self->screen->id, $self->id;
-    $self->_conn->send_cmd($cmd_str);
+    $self->_lcdproc->_send_cmd($cmd_str);
 
     return 1;
 }
@@ -128,8 +122,8 @@ sub _get_set_cmd_str {
 
 sub _create_widget_on_server {
     my $self = shift;
-    $log->debugf( 'Adding new widget: %s - %s', $self->id, $self->type ) if $log->is_debug;
-    $self->_conn->send_cmd( sprintf 'widget_add %s %s %s',
+    $log->debugf( 'Adding new widget: %s - %s', $self->id, $self->type );
+    $self->screen->_lcdproc->_send_cmd( sprintf 'widget_add %s %s %s',
         $self->screen->id, $self->id, $self->type );
 
     $self->added;

@@ -6,6 +6,8 @@ use strict;
 use warnings;
 
 use DateTime;
+use Log::Any::Adapter;
+use Log::Dispatch;
 
 use Net::LCDproc;
 use Net::LCDproc::Screen;
@@ -14,6 +16,27 @@ use Net::LCDproc::Widget::String;
 
 my $lcdproc;
 my $screen;
+my $loglevel = 'info';
+
+if ( defined $ARGV[0] ) {
+    $loglevel = $ARGV[0];
+}
+
+sub start_logging {
+
+    my $log = Log::Dispatch->new(
+        outputs => [
+            [
+                'Screen',
+                min_level => $loglevel,
+                newline   => 1,
+            ],
+        ]
+    );
+    Log::Any::Adapter->set( 'Dispatch', dispatcher => $log );
+
+    return $log;
+}
 
 sub setup_lcdproc_screen {
     $lcdproc = Net::LCDproc->new;
@@ -33,7 +56,6 @@ sub setup_lcdproc_screen {
 
 sub get_date_time {
     my $dt = DateTime->now;
-
     my $date_str = sprintf "%s %d %s %d", $dt->day_abbr, $dt->day, $dt->month_abbr, $dt->year;
     return ( $dt->hms, $date_str );
 }
@@ -68,6 +90,7 @@ sub add_widgets {
 }
 
 setup_lcdproc_screen;
+start_logging;
 my $widgets = add_widgets;
 
 while (1) {
@@ -84,4 +107,3 @@ while (1) {
     $lcdproc->update;
     sleep(1);
 }
-
