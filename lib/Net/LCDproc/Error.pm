@@ -13,7 +13,7 @@ has class_name => (
     is       => 'rw',
     isa      => 'Str',
     required => 1,
-    default  => sub { caller(11) },    # XXX: this seems fragile
+    default  => sub { caller 11 },    # XXX: this seems fragile
 
 );
 
@@ -25,25 +25,24 @@ has object => (
 
 sub short_msg {
     my $self = shift;
-    return sprintf "[%s] %s", $self->class_name, $self->message;
+    return sprintf '[%s] %s', $self->class_name, $self->message;
 }
 
-sub dump {
+sub dump_obj {
     my $self = shift;
-    
+
     if ( $self->has_object ) {
         $Data::Dumper::Terse = 1;
         return Data::Dumper->Dump( [ $self->object ] );
     }
 
-    return "No object was set by the throwing class";
+    return 'No object was set by the throwing class';
 }
 
 sub throwf {
-    my $self    = shift;
-    my $msg_str = shift;
-    my @args    = @_;
+    my ($self, $msg_str, @args) = @_;
     $self->throw( message => sprintf $msg_str, @args );
+    return;
 }
 
 __PACKAGE__->meta->make_immutable( inline_constructor => 0 );
@@ -108,4 +107,4 @@ isn't set, returns a string saying so.
 
 =head1 SEE ALSO
 
-L<Throwable::Error|Throwable::Error>
+Throwable::Error

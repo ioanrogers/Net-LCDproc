@@ -4,7 +4,7 @@ if ( !defined $ENV{LCDPROC_TESTS} ) {
     plan skip_all =>
 "Set LCDPROC_TESTS for full tests\nYou can also override defaults with LCDPROC_SERVER and LCDPROC_PORT\nSee docs for full details";
 } else {
-    plan tests => 12;
+    plan tests => 11;
 }
 
 use Net::LCDproc;
@@ -18,7 +18,6 @@ $lcdproc_opts{port}   = $ENV{LCDPROC_PORT}   if $ENV{LCDPROC_PORT};
 
 ok( $lcdproc = Net::LCDproc->new(%lcdproc_opts), 'Construct an Net::LCDproc' );
 isa_ok( $lcdproc, 'Net::LCDproc', '...gives the correct class' );
-ok( $lcdproc->init, 'Connect to server' );
 
 # screen
 ok( $screen = Net::LCDproc::Screen->new( id => "main" ) );

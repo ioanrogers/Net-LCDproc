@@ -11,6 +11,7 @@ extends 'Net::LCDproc::Widget';
 sub BUILD {
     my $self = shift;
     $self->_set_cmd( [qw/ text /] );
+    return 1;
 }
 
 has type => (
@@ -24,7 +25,7 @@ has text => (
     isa      => 'Str',
     required => 1,
     lazy     => 1,
-    default  => '',
+    default  => qw//,
     trigger  => sub {
         $_[0]->has_changed;
     },

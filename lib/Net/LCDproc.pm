@@ -13,42 +13,54 @@ use namespace::autoclean;
 Readonly my $PROTOCOL_VERSION => 0.3;
 
 has server => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1,
-    default  => 'localhost',
+    is            => 'ro',
+    isa           => 'Str',
+    required      => 1,
+    default       => 'localhost',
+    documentation => 'Hostname or IP address of LCDproc server',
 );
 
 has port => (
-    is       => 'ro',
-    isa      => 'Int',
-    required => 1,
-    default  => 13666,
+    is            => 'ro',
+    isa           => 'Int',
+    required      => 1,
+    default       => 13666,
+    documentation => 'Port the LCDproc server is listening on',
 );
 
-has [ 'width', 'height', 'cell_width', 'cell_height' ] => (
-    is  => 'rw',
-    isa => 'Int',
+has [ 'width', 'height' ] => (
+    is            => 'ro',
+    isa           => 'Int',
+    documentation => 'Dimensions of the display in cells',
+);
+
+has [ 'cell_width', 'cell_height' ] => (
+    is            => 'ro',
+    isa           => 'Int',
+    documentation => 'Dimensions of a cell in pixels',
 );
 
 has screens => (
-    is      => 'rw',
-    isa     => 'ArrayRef[Net::LCDproc::Screen]',
-    default => sub { [] },
-    lazy    => 1,
+    is            => 'rw',
+    traits        => ['Array'],
+    isa           => 'ArrayRef[Net::LCDproc::Screen]',
+    documentation => 'Array of active screens',
+    default       => sub { [] },
+    lazy          => 1,
+    handles       => { push_screen => 'push', },
 );
 
-has _conn => (
+has _lcdproc => (
     is  => 'rw',
-    isa => 'Net::LCDproc::Net',
+    isa => 'Net::LCDproc',
 );
 
 sub add_screen {
     my ( $self, $screen ) = @_;
-    $screen->_conn( $self->_conn );
-    push @{ $self->screens }, $screen;
 
-    return $screen;
+    #$screen->_conn( $self->_conn );
+    $self->push_screen($screen);
+    return 1;
 }
 
 sub remove_screen {
@@ -76,7 +88,7 @@ sub update {
     return 1;
 }
 
-sub init {
+sub BUILD {
     my $self = shift;
     my $conn = Net::LCDproc::Net->new( server => $self->server, port => $self->port );
     $conn->connect_to_lcdproc;
@@ -114,12 +126,9 @@ __PACKAGE__->meta->make_immutable;
 
 1;
 
-__END__
-
 =head1 SYNOPSIS
 
-    $lcdproc = Net::LCDproc->new();
-    $lcdproc->init;
+    $lcdproc = Net::LCDproc->new;
     $screen = Net::LCDproc::Screen->new( id => "main" );
 
     my $title = Net::LCDproc::Widget::Title->new( id => "title" );
@@ -141,13 +150,10 @@ __END__
     $screen->add_widget($wdgt);
 
     while (1) {
-        # update your widgets..
-        $lcdproc->update();
+        # update your widgets here ...
+        $lcdproc->update; # only changed widgets are updated
         sleep(1);
     }
 
-=head1 INSTALLATION
-
-    git clone git://github.com/ioanrogers/net-lcdproc.git
-    cd net-lcdproc
-    dzil install
+=head1 SEE ALSO
+L<LCDproc|http://lcdproc.sourceforge.net/>

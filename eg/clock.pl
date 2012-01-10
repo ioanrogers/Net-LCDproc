@@ -1,6 +1,6 @@
-#!/usr/bin/env perl
+#!env perl
 
-use 5.010;
+use v5.10;
 
 use strict;
 use warnings;
@@ -16,9 +16,7 @@ my $lcdproc;
 my $screen;
 
 sub setup_lcdproc_screen {
-    $lcdproc = Net::LCDproc->new();
-    $lcdproc->init()
-      or die "cannot connect: $!";
+    $lcdproc = Net::LCDproc->new;
 
     $screen = Net::LCDproc::Screen->new( id => "main" );
 
@@ -69,12 +67,12 @@ sub add_widgets {
     return \%widgets;
 }
 
-setup_lcdproc_screen();
-my $widgets = add_widgets();
+setup_lcdproc_screen;
+my $widgets = add_widgets;
 
 while (1) {
 
-    my ( $time_str, $date_str ) = get_date_time();
+    my ( $time_str, $date_str ) = get_date_time;
 
     $widgets->{clock}->text($time_str);
 
@@ -82,7 +80,8 @@ while (1) {
     if ( $widgets->{date}->text ne $date_str ) {
         $widgets->{date}->text($date_str);
     }
-    $lcdproc->update();
+
+    $lcdproc->update;
     sleep(1);
 }
 
