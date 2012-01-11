@@ -13,7 +13,6 @@ use Net::LCDproc;
 use Net::LCDproc::Screen;
 use Net::LCDproc::Widget::Title;
 use Net::LCDproc::Widget::String;
-use Net::LCDproc::Widget::Scroller;
 use Net::LCDproc::Widget::Num;
 
 my $lcdproc;
@@ -80,7 +79,7 @@ sub add_time_date_widgets {
 
     $screen1->add_widget( $widget->{time} );
 
-    $widget->{date} = Net::LCDproc::Widget::Scroller->new(
+    $widget->{date} = Net::LCDproc::Widget::String->new(
         id     => 'date',
         left   => 1,
         top    => 3,
