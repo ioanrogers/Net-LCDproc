@@ -14,9 +14,13 @@ use Net::LCDproc::Screen;
 use Net::LCDproc::Widget::Title;
 use Net::LCDproc::Widget::String;
 use Net::LCDproc::Widget::Scroller;
+use Net::LCDproc::Widget::Num;
 
 my $lcdproc;
-my $screen;
+my $screen1;
+my $screen2;
+my $widget = {};
+
 my $loglevel = 'info';
 
 if ( defined $ARGV[0] ) {
@@ -39,20 +43,22 @@ sub start_logging {
     return $log;
 }
 
-sub setup_lcdproc_screen {
-    $lcdproc = Net::LCDproc->new;
+sub add_screen {
+    my ( $id, $title_str ) = @_;
 
-    $screen = Net::LCDproc::Screen->new( id => "main" );
+    my $screen = Net::LCDproc::Screen->new( id => $id );
 
-    my $title = Net::LCDproc::Widget::Title->new( id => "title" );
-    $title->text('Net::LCDproc');
+    if ( defined $title_str ) {
+        my $title = Net::LCDproc::Widget::Title->new( id => $id . "_title" );
+        $title->text($title_str);
+        $screen->add_widget($title);
+    }
+
     $lcdproc->add_screen($screen);
-
-    $screen->set( 'name',      "Test Screen" );
+    $screen->set( 'name',      "clock" );
     $screen->set( 'heartbeat', "off" );
 
-    $screen->add_widget($title);
-
+    return $screen;
 }
 
 sub get_date_time {
@@ -61,53 +67,123 @@ sub get_date_time {
     return ( $dt->hms, $date_str );
 }
 
-sub add_widgets {
+sub add_time_date_widgets {
 
-    my %widgets;
+    my ( $time_str, $date_str ) = get_date_time;
 
-    my ( $time_str, $date_str ) = get_date_time();
-
-    my $clock = Net::LCDproc::Widget::String->new(
-        id   => "clock",
+    $widget->{time} = Net::LCDproc::Widget::String->new(
+        id   => 'time',
         x    => 1,
         y    => 2,
         text => $time_str,
     );
 
-    $widgets{clock} = $clock;
-    $screen->add_widget($clock);
+    $screen1->add_widget( $widget->{time} );
 
-    my $date = Net::LCDproc::Widget::Scroller->new(
-        id     => "date",
+    $widget->{date} = Net::LCDproc::Widget::Scroller->new(
+        id     => 'date',
         left   => 1,
         top    => 3,
-        right  => 8,
-        bottom => 3,
+        right  => $lcdproc->width,
+        bottom => $lcdproc->height,
         speed  => 1,
         text   => $date_str,
     );
 
-    $widgets{date} = $date;
-    $screen->add_widget($date);
-
-    return \%widgets;
+    $screen1->add_widget( $widget->{date} );
 }
 
-setup_lcdproc_screen;
-start_logging;
-my $widgets = add_widgets;
+sub add_clock_widget {
+    my ( $int, $x ) = @_;
 
-while (1) {
+    my $w = Net::LCDproc::Widget::Num->new(
+        id  => "clock_$x",
+        x   => $x,
+        int => $int,
+    );
+    $widget->{clock}->{$x} = $w;
+    $screen2->add_widget($w);
+}
 
+sub get_hms {
+    my $dt = DateTime->now;
+    my $h  = $dt->strftime('%H');
+    my $m  = $dt->strftime('%M');
+    my $s  = $dt->strftime('%S');
+
+    return ( $h, $m, $s );
+}
+
+sub add_clock_widgets {
+    my ( $hour, $min, $sec ) = get_hms;
+
+    # add the separators
+    add_clock_widget( 10, 7 );
+    add_clock_widget( 10, 14 );
+    my $char = 0;
+
+    $char = substr $hour, 0, 1;
+    add_clock_widget( $char, 1 );
+    $char = substr $hour, 1, 1;
+    add_clock_widget( $char, 4 );
+
+    $char = substr $min, 0, 1;
+    add_clock_widget( $char, 8 );
+    $char = substr $min, 1, 1;
+    add_clock_widget( $char, 11 );
+
+    $char = substr $sec, 0, 1;
+    add_clock_widget( $char, 15 );
+    $char = substr $sec, 1, 1;
+    add_clock_widget( $char, 18 );
+
+}
+
+sub update_clock_widgets {
+
+    my ( $hour, $min, $sec ) = get_hms;
+
+    my $char = substr $hour, 0, 1;
+    $widget->{clock}->{1}->int($char);
+
+    $char = substr $hour, 1, 1;
+    $widget->{clock}->{4}->int($char);
+
+    $char = substr $min, 0, 1;
+    $widget->{clock}->{8}->int($char);
+    $char = substr $min, 1, 1;
+    $widget->{clock}->{11}->int($char);
+
+    $char = substr $sec, 0, 1;
+    $widget->{clock}->{15}->int($char);
+    $char = substr $sec, 1, 1;
+    $widget->{clock}->{18}->int($char);
+
+}
+
+sub update_widgets {
     my ( $time_str, $date_str ) = get_date_time;
 
-    $widgets->{clock}->text($time_str);
+    $widget->{time}->text($time_str);
 
     # if day hasn't changed, don't update
-    if ( $widgets->{date}->text ne $date_str ) {
-        $widgets->{date}->text($date_str);
+    if ( $widget->{date}->text ne $date_str ) {
+        $widget->{date}->text($date_str);
     }
 
+    update_clock_widgets;
+}
+
+start_logging;
+$lcdproc = Net::LCDproc->new;
+$screen1 = add_screen( 'screen1', 'Time & Date' );
+$screen2 = add_screen('screen2');
+
+add_time_date_widgets;
+add_clock_widgets;
+
+while (1) {
+    update_widgets;
     $lcdproc->update;
     sleep(1);
 }
