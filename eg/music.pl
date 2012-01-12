@@ -4,7 +4,6 @@ use v5.10;
 use strict;
 use warnings;
 use Net::DBus;
-use Net::DBus::Dumper;
 use Net::DBus::Reactor;
 use Log::Any::Adapter;
 use Log::Dispatch;
@@ -15,8 +14,6 @@ use Net::LCDproc::Widget::String;
 use Net::LCDproc::Widget::Icon;
 use Net::LCDproc::Widget::Scroller;
 use Net::LCDproc::Widget::HBar;
-
-use YAML::Any;
 
 my $log;
 my $mediaplayer;
