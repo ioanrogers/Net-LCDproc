@@ -8,7 +8,7 @@ use namespace::autoclean;
 
 extends 'Net::LCDproc::Widget';
 
-has [ 'x', 'int' ] => (
+has ['x', 'int'] => (
     is       => 'rw',
     isa      => 'Int',
     required => 1,
@@ -18,13 +18,9 @@ has [ 'x', 'int' ] => (
     },
 );
 
-has '+type' => (
-    default => 'num',
-);
+has '+type' => (default => 'num',);
 
-has '+_set_cmd' => (
-    default => sub {[qw/ x int /]},
-);
+has '+_set_cmd' => (default => sub { [qw/ x int /] },);
 
 __PACKAGE__->meta->make_immutable;
 

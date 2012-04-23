@@ -18,7 +18,7 @@ has text => (
     },
 );
 
-has [ 'x', 'y' ] => (
+has ['x', 'y'] => (
     is       => 'rw',
     isa      => 'Int',
     required => 1,
@@ -28,13 +28,9 @@ has [ 'x', 'y' ] => (
     },
 );
 
-has '+type' => (
-    default => 'string',
-);
+has '+type' => (default => 'string',);
 
-has '+_set_cmd' => (
-    default => sub {[qw/ x y text /]},
-);
+has '+_set_cmd' => (default => sub { [qw/ x y text /] },);
 
 __PACKAGE__->meta->make_immutable;
 

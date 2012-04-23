@@ -31,9 +31,9 @@ sub short_msg {
 sub dump_obj {
     my $self = shift;
 
-    if ( $self->has_object ) {
+    if ($self->has_object) {
         $Data::Dumper::Terse = 1;
-        return Data::Dumper->Dump( [ $self->object ] );
+        return Data::Dumper->Dump([$self->object]);
     }
 
     return 'No object was set by the throwing class';
@@ -41,30 +41,30 @@ sub dump_obj {
 
 sub throwf {
     my ($self, $msg_str, @args) = @_;
-    $self->throw( message => sprintf $msg_str, @args );
+    $self->throw(message => sprintf $msg_str, @args);
     return;
 }
 
-__PACKAGE__->meta->make_immutable( inline_constructor => 0 );
+__PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
 1;
 
 =head1 SYNOPSIS
 
-    use Net::LCDproc;
-    use Try::Tiny;
+  use Net::LCDproc;
+  use Try::Tiny;
     
-    my $lcdproc = Net::LCDproc->new( server => 'no_such_host', port => 1234 );
+  my $lcdproc = Net::LCDproc->new( server => 'no_such_host', port => 1234 );
 
-    try {    
-        $lcdproc->init;
-    }
-    catch {
-        #die $_->message;
-        #die $_->dump;
-        #die $_->short_msg;
-        die $_;
-    };
+  try {    
+      $lcdproc->init;
+  }
+  catch {
+      #die $_->message;
+      #die $_->dump;
+      #die $_->short_msg;
+      die $_;
+  };
 
 =head1 DESCRIPTION
 

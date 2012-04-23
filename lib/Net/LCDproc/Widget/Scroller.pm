@@ -21,7 +21,7 @@ has text => (
 
 has direction => (
     is       => 'rw',
-    isa      => enum( [qw/h v m/] ),
+    isa      => enum([qw/h v m/]),
     required => 1,
     default  => 'h',
     trigger  => sub {
@@ -29,7 +29,7 @@ has direction => (
     },
 );
 
-has [ 'left', 'right', 'top', 'bottom', 'speed' ] => (
+has ['left', 'right', 'top', 'bottom', 'speed'] => (
     is       => 'rw',
     isa      => 'Int',
     required => 1,
@@ -39,13 +39,10 @@ has [ 'left', 'right', 'top', 'bottom', 'speed' ] => (
     },
 );
 
-has '+type' => (
-    default => 'scroller',
-);
+has '+type' => (default => 'scroller',);
 
-has '+_set_cmd' => (
-    default => sub {[qw/ left top right bottom direction speed text /]},
-);
+has '+_set_cmd' =>
+  (default => sub { [qw/ left top right bottom direction speed text /] },);
 
 __PACKAGE__->meta->make_immutable;
 

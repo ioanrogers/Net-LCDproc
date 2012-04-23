@@ -14,8 +14,8 @@ has id => (
 );
 
 has type => (
-    is      => 'ro',
-    isa     => 'Str',
+    is  => 'ro',
+    isa => 'Str',
 );
 
 has frame => (
@@ -34,7 +34,7 @@ has is_new => (
     isa      => 'Bool',
     default  => 1,
     required => 1,
-    handles  => { added => 'unset', },
+    handles  => {added => 'unset',},
 );
 
 has changed => (
@@ -48,20 +48,20 @@ has changed => (
 );
 
 has _set_cmd => (
-    is  => 'rw',
-    isa => 'ArrayRef',
+    is       => 'rw',
+    isa      => 'ArrayRef',
     required => 1,
-    default => sub {[]},
+    default  => sub { [] },
 );
 
 ### Public Methods
 
 sub set {
-    my ( $self, $attr_name, $new_val ) = @_;
+    my ($self, $attr_name, $new_val) = @_;
 
-    $log->debugf( 'Setting %s: "%s"', $attr_name, $new_val ) if $log->is_debug;
+    $log->debugf('Setting %s: "%s"', $attr_name, $new_val) if $log->is_debug;
     my $attr = $self->meta->get_attribute($attr_name);
-    $attr->set_value( $self, $new_val );
+    $attr->set_value($self, $new_val);
     $self->is_changed;
 
     return 1;
@@ -70,16 +70,16 @@ sub set {
 sub update {
     my $self = shift;
 
-    if ( $self->is_new ) {
+    if ($self->is_new) {
 
         # needs to be added
         $self->_create_widget_on_server;
     }
 
-    if ( !$self->changed ) {
+    if (!$self->changed) {
         return;
     }
-    $log->debug( 'Updating widget: ' . $self->id ) if $log->is_debug;
+    $log->debug('Updating widget: ' . $self->id) if $log->is_debug;
     my $cmd_str = $self->_get_set_cmd_str;
 
     $self->screen->_lcdproc->_send_cmd($cmd_str);
@@ -104,12 +104,12 @@ sub _get_set_cmd_str {
 
     my $cmd_str = sprintf 'widget_set %s %s', $self->screen->id, $self->id;
 
-    foreach my $name ( @{ $self->_set_cmd } ) {
+    foreach my $name (@{$self->_set_cmd}) {
         my $attr = $self->meta->get_attribute($name);
         my $val  = $attr->get_value($self);
 
         # should only ever be Str or Int
-        if ( $attr->type_constraint eq 'Str' ) {
+        if ($attr->type_constraint eq 'Str') {
             $cmd_str .= " \"$val\"";
         } else {
             $cmd_str .= " $val";
@@ -122,9 +122,9 @@ sub _get_set_cmd_str {
 
 sub _create_widget_on_server {
     my $self = shift;
-    $log->debugf( 'Adding new widget: %s - %s', $self->id, $self->type );
-    $self->screen->_lcdproc->_send_cmd( sprintf 'widget_add %s %s %s',
-        $self->screen->id, $self->id, $self->type );
+    $log->debugf('Adding new widget: %s - %s', $self->id, $self->type);
+    $self->screen->_lcdproc->_send_cmd(sprintf 'widget_add %s %s %s',
+        $self->screen->id, $self->id, $self->type);
 
     $self->added;
 

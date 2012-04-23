@@ -21,6 +21,6 @@ has cmd_str => (
 );
 
 package Moose::Meta::Attribute::Custom::Trait::LCDprocScreen;
-sub register_implementation { 'Net::LCDproc::Meta::Attribute::LCDproc::Screen' }
+sub register_implementation {'Net::LCDproc::Meta::Attribute::LCDproc::Screen'}
 
 1;

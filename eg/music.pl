@@ -5,6 +5,7 @@ use strict;
 use warnings;
 use Net::DBus;
 use Net::DBus::Reactor;
+use Net::DBus::Dumper;
 use Log::Any::Adapter;
 use Log::Dispatch;
 use Net::LCDproc;
@@ -30,36 +31,39 @@ my $icon = {
 };
 
 sub start_logging {
-    my $log = Log::Dispatch->new( outputs => [ [ 'Syslog', min_level => 'debug', ] ] );
-    Log::Any::Adapter->set( 'Dispatch', dispatcher => $log );
+    my $log =
+      Log::Dispatch->new(outputs => [['Syslog', min_level => 'debug',]]);
+    Log::Any::Adapter->set('Dispatch', dispatcher => $log);
     return $log;
 }
 
 sub get_metadata {
 
-    my $raw_metadata = $mpris->Get( 'org.mpris.MediaPlayer2.Player', "Metadata" );
+    my $raw_metadata =
+      $mpris->Get('org.mpris.MediaPlayer2.Player', "Metadata");
 
     my $metadata = {
-        artist     => $raw_metadata->{'xesam:artist'}->[0],          # I am lazy
+        artist     => $raw_metadata->{'xesam:artist'}->[0],         # I am lazy
         album      => $raw_metadata->{'xesam:album'},
         title      => $raw_metadata->{'xesam:title'},
         tracknum   => $raw_metadata->{'xesam:trackNumber'},
         length_sec => $raw_metadata->{'mpris:length'} / 1_000_000,
-        playbackstatus => $mpris->Get( 'org.mpris.MediaPlayer2.Player', 'PlaybackStatus' ),
+        playbackstatus =>
+          $mpris->Get('org.mpris.MediaPlayer2.Player', 'PlaybackStatus'),
     };
 
-    if ( $metadata->{playbackstatus} eq 'Stopped' ) {
+    if ($metadata->{playbackstatus} eq 'Stopped') {
         $metadata->{artist_album_str} = 'Not Playing';
         $metadata->{track_str}        = '';
     } else {
 
         # space at the end because using marquee
         $metadata->{artist_album_str} = sprintf '%s :: %s :: ',
-            $metadata->{artist}, $metadata->{album};
+          $metadata->{artist}, $metadata->{album};
         $metadata->{track_str} = sprintf '%d. %s ',
-            $metadata->{tracknum} // 0, $metadata->{title};
+          $metadata->{tracknum} // 0, $metadata->{title};
         $metadata->{position_sec} =
-          $mpris->Get( 'org.mpris.MediaPlayer2.Player', "Position" ) / 1_000_000;
+          $mpris->Get('org.mpris.MediaPlayer2.Player', "Position") / 1_000_000;
     }
 
     return $metadata;
@@ -71,12 +75,12 @@ sub get_mpris {
     # find a music player
     my $service = $bus->get_service("org.freedesktop.DBus");
     my $dbus    = $service->get_object("/org/freedesktop/DBus");
-    foreach ( @{ $dbus->ListNames } ) {
+    foreach (@{$dbus->ListNames}) {
         next if not m/org\.mpris\.MediaPlayer2/;
         $log->info("Trying '$_'");
         my $mpris_service = $bus->get_service($_);
         $mpris = $mpris_service->get_object('/org/mpris/MediaPlayer2');
-        $mediaplayer = $mpris->Get( 'org.mpris.MediaPlayer2', 'Identity' );
+        $mediaplayer = $mpris->Get('org.mpris.MediaPlayer2', 'Identity');
         $log->info("Using $mediaplayer");
         last;
     }
@@ -85,27 +89,27 @@ sub get_mpris {
 sub calc_bar_length {
     my $metadata = shift;
 
-    if ( !defined $metadata->{length_sec} ) {
+    if (!defined $metadata->{length_sec}) {
         return 0;
     }
 
-    if ( !defined $metadata->{position_sec} ) {
+    if (!defined $metadata->{position_sec}) {
         return 0;
     }
 
     my $total_screen_length = $lcdproc->width * $lcdproc->cell_width;
 
     my $curr_pc = $metadata->{position_sec} / $metadata->{length_sec} * 100;
-    $log->debug( sprintf 'Track progress: %.2f%%', $curr_pc );
+    $log->debug(sprintf 'Track progress: %.2f%%', $curr_pc);
 
-    my $length = int( $total_screen_length * ( $curr_pc / 100 ) );
+    my $length = int($total_screen_length * ($curr_pc / 100));
     return $length;
 }
 
 sub setup_screen {
 
     $lcdproc = Net::LCDproc->new;
-    $screen = Net::LCDproc::Screen->new( id => 'mediaplayer' );
+    $screen = Net::LCDproc::Screen->new(id => 'mediaplayer');
     $lcdproc->add_screen($screen);
 
     my $metadata = get_metadata;
@@ -120,7 +124,7 @@ sub setup_screen {
         direction => 'm',
         text      => $metadata->{artist_album_str},
     );
-    $screen->add_widget( $widget->{artist_album} );
+    $screen->add_widget($widget->{artist_album});
 
     $widget->{track} = Net::LCDproc::Widget::Scroller->new(
         id        => 'track',
@@ -132,7 +136,7 @@ sub setup_screen {
         direction => 'm',
         text      => $metadata->{track_str},
     );
-    $screen->add_widget( $widget->{track} );
+    $screen->add_widget($widget->{track});
 
     $widget->{icon} = Net::LCDproc::Widget::Icon->new(
         id       => 'icon',
@@ -140,15 +144,15 @@ sub setup_screen {
         y        => 3,
         iconname => $icon->{$metadata->{playbackstatus}},
     );
-    $screen->add_widget( $widget->{icon} );
-      
-   $widget->{progress} = Net::LCDproc::Widget::HBar->new(
+    $screen->add_widget($widget->{icon});
+
+    $widget->{progress} = Net::LCDproc::Widget::HBar->new(
         id     => 'progress',
         x      => 1,
         y      => 4,
         length => calc_bar_length($metadata),
     );
-    $screen->add_widget( $widget->{progress} );
+    $screen->add_widget($widget->{progress});
 
 }
 
@@ -157,7 +161,8 @@ sub update_status {
 
     # TODO if the metadata changes, it get passed from dbus
     my $metadata = get_metadata;
-    my $playbackstatus = $mpris->Get( 'org.mpris.MediaPlayer2.Player', 'PlaybackStatus' );
+    my $playbackstatus =
+      $mpris->Get('org.mpris.MediaPlayer2.Player', 'PlaybackStatus');
 
     given ($playbackstatus) {
         when ('Stopped') {
@@ -177,9 +182,9 @@ sub update_status {
         $log->debug('Something changed so updating EVERYTHING');
 
         if ($metadata) {
-            $widget->{track}->text( $metadata->{track_str} );
-            $widget->{artist_album}->text( $metadata->{artist_album_str} );
-            $widget->{icon}->iconname( $icon->{$metadata->{playbackstatus} } ),
+            $widget->{track}->text($metadata->{track_str});
+            $widget->{artist_album}->text($metadata->{artist_album_str});
+            $widget->{icon}->iconname($icon->{$metadata->{playbackstatus}}),;
         }
     }
 
@@ -194,7 +199,7 @@ say "Starting main loop. Check your syslog";
 my $reactor = Net::DBus::Reactor->main;
 
 # a better program might care *what* changed
-$mpris->connect_to_signal( 'PropertiesChanged', \&update_status );
-my $timer = $reactor->add_timeout( 1000, \&update_status );
+$mpris->connect_to_signal('PropertiesChanged', \&update_status);
+my $timer = $reactor->add_timeout(1000, \&update_status);
 
 $reactor->run;

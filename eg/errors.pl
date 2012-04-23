@@ -15,7 +15,7 @@ use Try::Tiny;
 my $lcdproc;
 my $screen;
 
-$lcdproc = Net::LCDproc->new( server => 'badhost', port => 1234 );
+$lcdproc = Net::LCDproc->new(server => 'badhost', port => 1234);
 
 try {
     $lcdproc->init;
