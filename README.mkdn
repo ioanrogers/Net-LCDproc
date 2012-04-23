@@ -1,0 +1,64 @@
+# NAME
+
+Net::LCDproc - Client library to interact with [LCDproc](http://lcdproc.sourceforge.net/)
+
+# VERSION
+
+version 0.1.0
+
+# SYNOPSIS
+
+    $lcdproc = Net::LCDproc->new;
+    $screen = Net::LCDproc::Screen->new( id => "main" );
+
+    my $title = Net::LCDproc::Widget::Title->new( id => "title" );
+    $title->text('My Screen Title');
+    $lcdproc->add_screen($screen);
+
+    $screen->set( 'name',      "Test Screen" );
+    $screen->set( 'heartbeat', "off" );
+
+    $screen->add_widget($title);
+
+    my $wdgt = Net::LCDproc::Widget::String->new(
+        id   => "wdgt",
+        x    => 1,
+        y    => 2,
+        text => "Some Text",
+    );
+
+    $screen->add_widget($wdgt);
+
+    while (1) {
+        # update your widgets here ...
+        $lcdproc->update; # only changed widgets are updated
+        sleep(1);
+    }
+
+# SEE ALSO
+
+Please see those modules/websites for more information related to this module.
+
+- [LCDproc](http://lcdproc.sourceforge.net/)
+
+# BUGS AND LIMITATIONS
+
+You can make new bug reports, and view existing ones, through the
+web interface at [https://github.com/ioanrogers/Net-LCDproc/issues](https://github.com/ioanrogers/Net-LCDproc/issues).
+
+# SOURCE
+
+The development version is on github at [http://github.com/ioanrogers/Net-LCDproc](http://github.com/ioanrogers/Net-LCDproc)
+and may be cloned from [git://github.com/ioanrogers/Net-LCDproc.git](git://github.com/ioanrogers/Net-LCDproc.git)
+
+# AUTHOR
+
+Ioan Rogers <ioanr@cpan.org>
+
+# COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2012 by Ioan Rogers.
+
+This is free software, licensed under:
+
+    The GNU General Public License, Version 3, June 2007
