@@ -39,7 +39,6 @@ has ['left', 'right', 'top', 'bottom', 'speed'] => (
     },
 );
 
-has '+type' => (default => 'scroller',);
 
 has '+_set_cmd' =>
   (default => sub { [qw/ left top right bottom direction speed text /] },);

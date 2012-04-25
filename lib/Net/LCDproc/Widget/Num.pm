@@ -18,8 +18,6 @@ has ['x', 'int'] => (
     },
 );
 
-has '+type' => (default => 'num',);
-
 has '+_set_cmd' => (default => sub { [qw/ x int /] },);
 
 __PACKAGE__->meta->make_immutable;

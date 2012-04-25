@@ -26,8 +26,6 @@ has ['left', 'right', 'top', 'bottom', 'width', 'height', 'speed'] => (
     },
 );
 
-has '+type' => (default => 'frame',);
-
 has '+_set_cmd' => (default => sub { [qw/left top right bottom width height direction speed/] },);
 
 __PACKAGE__->meta->make_immutable;

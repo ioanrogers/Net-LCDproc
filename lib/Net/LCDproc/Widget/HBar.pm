@@ -1,6 +1,6 @@
 package Net::LCDproc::Widget::HBar;
 
-#ABSTRACT: 'hbar' widget
+#ABSTRACT: draw a horizontal bar
 
 use v5.10;
 use Moose;
@@ -17,8 +17,6 @@ has ['x', 'y', 'length'] => (
         $_[0]->has_changed;
     },
 );
-
-has '+type' => (default => 'hbar',);
 
 has '+_set_cmd' => (default => sub { [qw/ x y length /] },);
 

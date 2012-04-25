@@ -16,6 +16,11 @@ has id => (
 has type => (
     is  => 'ro',
     isa => 'Str',
+    default => sub {
+        my $pkg = shift->meta->{package};
+        my @parts = split /::/, $pkg; 
+        return lc $parts[-1];
+    },
 );
 
 has frame_id => (

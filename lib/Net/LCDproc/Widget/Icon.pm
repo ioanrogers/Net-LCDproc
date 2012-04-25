@@ -56,8 +56,6 @@ has ['x', 'y'] => (
     },
 );
 
-has '+type' => (default => 'icon',);
-
 has '+_set_cmd' => (default => sub { [qw/ x y iconname /] },);
 
 __PACKAGE__->meta->make_immutable;

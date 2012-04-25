@@ -1,6 +1,6 @@
 package Net::LCDproc::Widget::String;
 
-#ABSTRACT: 'string' widget
+#ABSTRACT: show regular strings
 
 use v5.10;
 use Moose;
@@ -27,8 +27,6 @@ has ['x', 'y'] => (
         $_[0]->has_changed;
     },
 );
-
-has '+type' => (default => 'string',);
 
 has '+_set_cmd' => (default => sub { [qw/ x y text /] },);
 
