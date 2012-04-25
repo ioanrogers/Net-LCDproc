@@ -18,9 +18,11 @@ has type => (
     isa => 'Str',
 );
 
-has frame => (
-    is  => 'ro',
-    isa => 'Net::LCDproc::Widget::Frame',
+has frame_id => (
+    is  => 'rw',
+    isa => 'Str',
+    predicate => 'has_frame_id',
+    #isa => 'Net::LCDproc::Widget::Frame',
 );
 
 has screen => (
@@ -123,9 +125,15 @@ sub _get_set_cmd_str {
 sub _create_widget_on_server {
     my $self = shift;
     $log->debugf('Adding new widget: %s - %s', $self->id, $self->type);
-    $self->screen->_lcdproc->_send_cmd(sprintf 'widget_add %s %s %s',
-        $self->screen->id, $self->id, $self->type);
+    my $add_str = sprintf 'widget_add %s %s %s',
+        $self->screen->id, $self->id, $self->type;
+    
 
+    if ($self->has_frame_id) {
+        $add_str .= " -in " . $self->frame_id; 
+    }
+    $self->screen->_lcdproc->_send_cmd($add_str);
+        
     $self->added;
 
     # make sure it gets set
