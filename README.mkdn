@@ -4,7 +4,7 @@ Net::LCDproc - Client library to interact with [LCDproc](http://lcdproc.sourcefo
 
 # VERSION
 
-version 0.1.0
+version 0.1.1
 
 # SYNOPSIS
 
