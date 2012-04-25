@@ -46,8 +46,7 @@ sub add_screen {
     my $screen = Net::LCDproc::Screen->new(id => $id);
 
     if (defined $title_str) {
-        my $title = Net::LCDproc::Widget::Title->new(id => $id . "_title");
-        $title->text($title_str);
+        my $title = Net::LCDproc::Widget::Title->new(id => $id . "_title", text => $title_str);
         $screen->add_widget($title);
     }
 
@@ -79,13 +78,10 @@ sub add_time_date_widgets {
     $screen1->add_widget($widget->{time});
 
     $widget->{date} = Net::LCDproc::Widget::String->new(
-        id     => 'date',
-        left   => 1,
-        top    => 3,
-        right  => $lcdproc->width,
-        bottom => $lcdproc->height,
-        speed  => 1,
-        text   => $date_str,
+        id   => 'date',
+        x    => 1,
+        y    => 3,
+        text => $date_str,
     );
 
     $screen1->add_widget($widget->{date});

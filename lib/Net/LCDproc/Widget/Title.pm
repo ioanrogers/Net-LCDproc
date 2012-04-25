@@ -12,11 +12,6 @@ has text => (
     is       => 'rw',
     isa      => 'Str',
     required => 1,
-    lazy     => 1,
-    default  => q{},
-    trigger  => sub {
-        $_[0]->has_changed;
-    },
 );
 
 has '+_set_cmd' => (default => sub { [qw/ text /] },);

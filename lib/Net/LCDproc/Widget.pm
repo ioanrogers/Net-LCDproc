@@ -4,6 +4,7 @@ package Net::LCDproc::Widget;
 
 use v5.10;
 use Moose;
+use Net::LCDproc::Meta::Widget;
 use Log::Any qw($log);
 use namespace::autoclean;
 
@@ -16,6 +17,7 @@ has id => (
 has type => (
     is  => 'ro',
     isa => 'Str',
+    traits => ['NoState'],
     default => sub {
         my $pkg = shift->meta->{package};
         my @parts = split /::/, $pkg; 
@@ -26,6 +28,7 @@ has type => (
 has frame_id => (
     is  => 'rw',
     isa => 'Str',
+    traits => ['NoState'],
     predicate => 'has_frame_id',
     #isa => 'Net::LCDproc::Widget::Frame',
 );
@@ -33,10 +36,11 @@ has frame_id => (
 has screen => (
     is  => 'rw',
     isa => 'Net::LCDproc::Screen',
+    traits => ['NoState'],
 );
 
 has is_new => (
-    traits   => ['Bool'],
+    traits   => [qw/Bool NoState/],
     is       => 'ro',
     isa      => 'Bool',
     default  => 1,
@@ -45,7 +49,7 @@ has is_new => (
 );
 
 has changed => (
-    traits  => ['Bool'],
+    traits  => [qw/Bool NoState/],
     is      => 'rw',
     isa     => 'Bool',
     handles => {
@@ -57,6 +61,7 @@ has changed => (
 has _set_cmd => (
     is       => 'rw',
     isa      => 'ArrayRef',
+    traits => ['NoState'],
     required => 1,
     default  => sub { [] },
 );

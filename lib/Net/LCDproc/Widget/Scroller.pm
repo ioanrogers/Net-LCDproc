@@ -23,20 +23,12 @@ has direction => (
     is       => 'rw',
     isa      => enum([qw/h v m/]),
     required => 1,
-    default  => 'h',
-    trigger  => sub {
-        $_[0]->has_changed;
-    },
 );
 
 has ['left', 'right', 'top', 'bottom', 'speed'] => (
     is       => 'rw',
     isa      => 'Int',
     required => 1,
-    default  => 0,
-    trigger  => sub {
-        $_[0]->has_changed;
-    },
 );
 
 

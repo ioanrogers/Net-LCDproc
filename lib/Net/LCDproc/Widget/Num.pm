@@ -13,9 +13,6 @@ has ['x', 'int'] => (
     isa      => 'Int',
     required => 1,
     default  => 1,
-    trigger  => sub {
-        $_[0]->has_changed;
-    },
 );
 
 has '+_set_cmd' => (default => sub { [qw/ x int /] },);

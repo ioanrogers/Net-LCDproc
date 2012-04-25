@@ -12,18 +12,12 @@ has direction => (
     is       => 'rw',
     isa      => enum(['v', 'h']),
     required => 1,
-    trigger  => sub {
-        $_[0]->has_changed;
-    },
 );
 
 has ['left', 'right', 'top', 'bottom', 'width', 'height', 'speed'] => (
     is       => 'rw',
     isa      => 'Int',
     required => 1,
-    trigger  => sub {
-        $_[0]->has_changed;
-    },
 );
 
 has '+_set_cmd' => (default => sub { [qw/left top right bottom width height direction speed/] },);
