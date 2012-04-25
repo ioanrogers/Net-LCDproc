@@ -20,12 +20,13 @@ use Moose::Role;
 
 before '_process_options' => sub {
     my ($self, $name, $options) = @_;
-    
-    if (exists $options->{traits} && grep { 'NoState' } @{ $options->{traits} } ) {
+
+    if (exists $options->{traits} && grep {'NoState'} @{$options->{traits}}) {
         return;
     }
-    
+
     if ($name eq 'id') {
+
         # this is immutable
         return;
     }
@@ -38,7 +39,7 @@ before '_process_options' => sub {
 
     $options->{trigger} = sub {
         shift->has_changed;
-      };
+    };
 };
 
 package Net::LCDproc::Meta::Widget::Trait::NoState;

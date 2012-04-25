@@ -46,7 +46,10 @@ sub add_screen {
     my $screen = Net::LCDproc::Screen->new(id => $id);
 
     if (defined $title_str) {
-        my $title = Net::LCDproc::Widget::Title->new(id => $id . "_title", text => $title_str);
+        my $title = Net::LCDproc::Widget::Title->new(
+            id   => $id . "_title",
+            text => $title_str
+        );
         $screen->add_widget($title);
     }
 

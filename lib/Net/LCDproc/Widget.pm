@@ -15,27 +15,28 @@ has id => (
 );
 
 has type => (
-    is  => 'ro',
-    isa => 'Str',
-    traits => ['NoState'],
+    is      => 'ro',
+    isa     => 'Str',
+    traits  => ['NoState'],
     default => sub {
         my $pkg = shift->meta->{package};
-        my @parts = split /::/, $pkg; 
+        my @parts = split /::/, $pkg;
         return lc $parts[-1];
     },
 );
 
 has frame_id => (
-    is  => 'rw',
-    isa => 'Str',
-    traits => ['NoState'],
+    is        => 'rw',
+    isa       => 'Str',
+    traits    => ['NoState'],
     predicate => 'has_frame_id',
+
     #isa => 'Net::LCDproc::Widget::Frame',
 );
 
 has screen => (
-    is  => 'rw',
-    isa => 'Net::LCDproc::Screen',
+    is     => 'rw',
+    isa    => 'Net::LCDproc::Screen',
     traits => ['NoState'],
 );
 
@@ -61,7 +62,7 @@ has changed => (
 has _set_cmd => (
     is       => 'rw',
     isa      => 'ArrayRef',
-    traits => ['NoState'],
+    traits   => ['NoState'],
     required => 1,
     default  => sub { [] },
 );
@@ -136,14 +137,13 @@ sub _create_widget_on_server {
     my $self = shift;
     $log->debugf('Adding new widget: %s - %s', $self->id, $self->type);
     my $add_str = sprintf 'widget_add %s %s %s',
-        $self->screen->id, $self->id, $self->type;
-    
+      $self->screen->id, $self->id, $self->type;
 
     if ($self->has_frame_id) {
-        $add_str .= " -in " . $self->frame_id; 
+        $add_str .= " -in " . $self->frame_id;
     }
     $self->screen->_lcdproc->_send_cmd($add_str);
-        
+
     $self->added;
 
     # make sure it gets set

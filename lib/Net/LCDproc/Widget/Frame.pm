@@ -20,7 +20,9 @@ has ['left', 'right', 'top', 'bottom', 'width', 'height', 'speed'] => (
     required => 1,
 );
 
-has '+_set_cmd' => (default => sub { [qw/left top right bottom width height direction speed/] },);
+has '+_set_cmd' =>
+  (default => sub { [qw/left top right bottom width height direction speed/] },
+  );
 
 __PACKAGE__->meta->make_immutable;
 

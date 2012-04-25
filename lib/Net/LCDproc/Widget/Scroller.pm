@@ -31,7 +31,6 @@ has ['left', 'right', 'top', 'bottom', 'speed'] => (
     required => 1,
 );
 
-
 has '+_set_cmd' =>
   (default => sub { [qw/ left top right bottom direction speed text /] },);
 
