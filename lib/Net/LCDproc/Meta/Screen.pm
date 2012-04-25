@@ -1,4 +1,4 @@
-package Net::LCDproc::Meta::Attribute::LCDproc::Screen;
+package Net::LCDproc::Meta::Screen;
 
 use v5.10;
 use Moose::Role;
@@ -21,6 +21,6 @@ has cmd_str => (
 );
 
 package Moose::Meta::Attribute::Custom::Trait::LCDprocScreen;
-sub register_implementation {'Net::LCDproc::Meta::Attribute::LCDproc::Screen'}
+sub register_implementation {'Net::LCDproc::Meta::Screen'}
 
 1;

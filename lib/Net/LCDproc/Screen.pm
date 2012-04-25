@@ -8,7 +8,7 @@ use Moose::Util::TypeConstraints;
 use Log::Any qw($log);
 use namespace::autoclean;
 
-with 'Net::LCDproc::Meta::Attribute::LCDproc::Screen';
+with 'Net::LCDproc::Meta::Screen';
 
 has id => (
     is       => 'ro',
