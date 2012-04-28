@@ -1,5 +1,7 @@
 package Net::LCDproc::Meta::Screen;
 
+# ABSTRACT: Attributes for the Screen
+
 use v5.10;
 use Moose::Role;
 use Moose::Util::TypeConstraints;
