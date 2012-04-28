@@ -1,14 +1,15 @@
-Format-Specification: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=135
-Maintainer: Ioan Rogers <ioan.rogers@gmail.com>
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Net-LCDproc
+Upstream-Contact: Ioan Rogers <ioanr@cpan.org>
 Source: http://github.com/ioanrogers/Net-LCDproc
-Name: Net-LCDproc
 
 Files: *
-Copyright: Ioan Rogers <ioan.rogers@gmail.com>
-License: Artistic
+Copyright: 2010-12 Ioan Rogers <ioanr@cpan.org>
+License: GPL-3
 
 Files: doc/lcdproc_protocol.pod
-Copyright: Peter Marschall <peter@adpm.de>
-License: GFDL 1.1
-
+Copyright: 2010 Markus Dolze
+           2006 Peter Marschall
+           2002 Guillaume Filion
+License: GFDL-1.1+
 
