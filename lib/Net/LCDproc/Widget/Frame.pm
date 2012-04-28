@@ -50,3 +50,6 @@ Frame dimension in chars
 =item speed
 
 Speed of scrolling, if needed
+
+=back
+
