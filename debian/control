@@ -7,7 +7,8 @@ Build-Depends: debhelper (>= 9),
 Build-Depends-Indep: libmoose-perl,
                      libthrowable-perl,
                      liblog-any-perl,
-                     libreadonly-perl
+                     libreadonly-perl,
+                     libnamespace-autoclean-perl
 Standards-Version: 3.9.3
 Homepage: https://metacpan.org/release/Net-LCDproc/
 
@@ -19,7 +20,8 @@ Depends: ${perl:Depends},
          libthrowable-perl,
          perl,
          liblog-any-perl,
-         libreadonly-perl
+         libreadonly-perl,
+         libnamespace-autoclean-perl
 Recommends: libreadonly-xs-perl
 Description: LCDproc client library
  LCDproc client library
