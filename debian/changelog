@@ -1,4 +1,4 @@
-libnet-lcdproc-perl (0.1.1-1) unstable; urgency=low
+libnet-lcdproc-perl (0.1.1) unstable; urgency=low
 
   * New upstream release
   * Cleaned deps in d/control
@@ -6,7 +6,7 @@ libnet-lcdproc-perl (0.1.1-1) unstable; urgency=low
 
  -- Ioan Rogers <ioanr@cpan.org>  Fri, 27 Apr 2012 19:25:22 -0700
 
-libnet-lcdproc-perl (0.1-1) unstable; urgency=low
+libnet-lcdproc-perl (0.1.0) unstable; urgency=low
 
   * Initial Release.
 
