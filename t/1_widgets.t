@@ -4,7 +4,7 @@ if (!defined $ENV{LCDPROC_TESTS}) {
     plan skip_all =>
       "Set LCDPROC_TESTS for full tests\nYou can also override defaults with LCDPROC_SERVER and LCDPROC_PORT\nSee docs for full details";
 } else {
-    plan tests => 11;
+    plan tests => 10;
 }
 
 use Net::LCDproc;
@@ -26,8 +26,7 @@ ok($screen->set('heartbeat', "off"));
 ok($lcdproc->add_screen($screen));
 
 # title
-ok(my $title = Net::LCDproc::Widget::Title->new(id => "title"));
-ok($title->text('Net::LCDproc Widget Tests'));
+ok(my $title = Net::LCDproc::Widget::Title->new(id => 'title', text => 'Net::LCDproc Widget Tests'));
 ok($screen->add_widget($title));
 
 # string
