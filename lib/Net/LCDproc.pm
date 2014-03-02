@@ -2,7 +2,7 @@ package Net::LCDproc;
 
 #ABSTRACT: Client library to interact with L<LCDproc|http://lcdproc.sourceforge.net/>
 
-use v5.10;
+use v5.10.2;
 use Moose;
 use Net::LCDproc::Error;
 use Log::Any qw($log);

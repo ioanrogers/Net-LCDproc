@@ -2,7 +2,7 @@ package Net::LCDproc::Meta::Widget;
 
 # ABSTRACT: Handles the state of widgets
 
-use v5.10;
+use v5.10.2;
 use Moose qw//;
 use Moose::Exporter;
 

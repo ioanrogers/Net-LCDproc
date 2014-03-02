@@ -2,7 +2,7 @@ package Net::LCDproc::Error;
 
 #ABSTRACT: Error class
 
-use v5.10;
+use v5.10.2;
 use Moose;
 use Data::Dumper qw//;
 use namespace::autoclean;
@@ -53,10 +53,10 @@ __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
   use Net::LCDproc;
   use Try::Tiny;
-    
+
   my $lcdproc = Net::LCDproc->new( server => 'no_such_host', port => 1234 );
 
-  try {    
+  try {
       $lcdproc->init;
   }
   catch {
@@ -82,7 +82,7 @@ This module offers a few other options for you to choose from.
 
 =item C<class_name>
 
-B<Required>. A string containing the name of the throwing class. 
+B<Required>. A string containing the name of the throwing class.
 
 =item C<object>
 
@@ -100,7 +100,7 @@ Returns a string containing the C<class_name> and the C<message>.
 
 =item C<dump>
 
-Returns a stringified C<< $self->object >>, using L<Data::Dumper|Data::Dumper>. If C<< $self->object >> 
+Returns a stringified C<< $self->object >>, using L<Data::Dumper|Data::Dumper>. If C<< $self->object >>
 isn't set, returns a string saying so.
 
 =back

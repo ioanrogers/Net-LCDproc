@@ -2,7 +2,7 @@ package Net::LCDproc::Widget::Title;
 
 #ABSTRACT: 'title' widget
 
-use v5.10;
+use v5.10.2;
 use Moose;
 use namespace::autoclean;
 

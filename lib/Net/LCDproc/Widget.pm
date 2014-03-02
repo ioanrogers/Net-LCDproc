@@ -2,7 +2,7 @@ package Net::LCDproc::Widget;
 
 #ABSTRACT: Base class for all the widgets
 
-use v5.10;
+use v5.10.2;
 use Moose;
 use Net::LCDproc::Meta::Widget;
 use Log::Any qw($log);

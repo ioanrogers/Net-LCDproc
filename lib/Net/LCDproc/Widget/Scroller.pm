@@ -2,7 +2,7 @@ package Net::LCDproc::Widget::Scroller;
 
 #ABSTRACT: 'scroller' widget
 
-use v5.10;
+use v5.10.2;
 use Moose;
 use Moose::Util::TypeConstraints;
 use namespace::autoclean;

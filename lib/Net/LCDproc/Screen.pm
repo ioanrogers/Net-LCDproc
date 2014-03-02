@@ -2,7 +2,7 @@ package Net::LCDproc::Screen;
 
 #ABSTRACT: represents an LCDproc screen
 
-use v5.10;
+use v5.10.2;
 use Moose;
 use Moose::Util::TypeConstraints;
 use Log::Any qw($log);

@@ -2,7 +2,7 @@ package Net::LCDproc::Widget::VBar;
 
 #ABSTRACT: draw a vertical bar
 
-use v5.10;
+use v5.10.2;
 use Moose;
 use namespace::autoclean;
 

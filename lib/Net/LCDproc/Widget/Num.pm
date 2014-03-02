@@ -2,7 +2,7 @@ package Net::LCDproc::Widget::Num;
 
 #ABSTRACT: 'num' widget
 
-use v5.10;
+use v5.10.2;
 use Moose;
 use namespace::autoclean;
 

@@ -2,7 +2,7 @@ package Net::LCDproc::Widget::HBar;
 
 #ABSTRACT: draw a horizontal bar
 
-use v5.10;
+use v5.10.2;
 use Moose;
 use namespace::autoclean;
 

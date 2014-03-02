@@ -2,7 +2,7 @@ package Net::LCDproc::Widget::String;
 
 #ABSTRACT: show regular strings
 
-use v5.10;
+use v5.10.2;
 use Moose;
 use namespace::autoclean;
 
