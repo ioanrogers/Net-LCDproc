@@ -20,7 +20,7 @@ has ['x', 'y'] => (
     required => 1,
 );
 
-has '+_set_cmd' => (default => sub { [qw/ x y text /] },);
+has '+_set_cmd' => ( default => sub { [qw/ x y text /] } );
 
 __PACKAGE__->meta->make_immutable;
 

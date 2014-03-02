@@ -14,7 +14,7 @@ has ['x', 'y', 'length'] => (
     required => 1,
 );
 
-has '+_set_cmd' => (default => sub { [qw/ x y length /] },);
+has '+_set_cmd' => ( default => sub { [qw/ x y length /] } );
 
 __PACKAGE__->meta->make_immutable;
 

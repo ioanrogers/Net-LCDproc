@@ -163,13 +163,13 @@ sub _handle_response {
         when (/error/) {
             $log->error('ERROR: ' . $args[0]);
             return;
-        };
+        }
         when (/connect/) {
             return \@args;
         }
         when (/success/) {
             return 1;
-        };
+        }
         default {
 
             # don't care about listen or ignore
@@ -177,8 +177,8 @@ sub _handle_response {
             # FIXME: start caring! Then only update the server when
             # it is actually listening
             return $self->_handle_response;
-        };
-    };
+        }
+    }
 
 }
 

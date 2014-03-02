@@ -14,7 +14,7 @@ has text => (
     required => 1,
 );
 
-has '+_set_cmd' => (default => sub { [qw/ text /] },);
+has '+_set_cmd' => ( default => sub { [qw/ text /] } );
 
 __PACKAGE__->meta->make_immutable;
 

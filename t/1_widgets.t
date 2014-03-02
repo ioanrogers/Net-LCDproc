@@ -26,7 +26,11 @@ ok($screen->set('heartbeat', "off"));
 ok($lcdproc->add_screen($screen));
 
 # title
-ok(my $title = Net::LCDproc::Widget::Title->new(id => 'title', text => 'Net::LCDproc Widget Tests'));
+ok(
+    my $title = Net::LCDproc::Widget::Title->new(
+        id   => 'title',
+        text => 'Net::LCDproc Widget Tests'
+    ));
 ok($screen->add_widget($title));
 
 # string

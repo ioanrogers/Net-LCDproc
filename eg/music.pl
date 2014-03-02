@@ -168,15 +168,15 @@ sub update_status {
     given ($playbackstatus) {
         when ('Stopped') {
             $widget->{artist_album}->text('Nothing playing');
-        };
+        }
         when ('Paused') {
 
             # icon
-        };
+        }
         default {
             my $length = calc_bar_length($metadata);
             $widget->{progress}->length($length);
-        };
+        }
     }
 
     if ($changed) {

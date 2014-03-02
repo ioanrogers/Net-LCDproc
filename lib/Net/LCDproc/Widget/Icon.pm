@@ -48,7 +48,7 @@ has ['x', 'y'] => (
     required => 1,
 );
 
-has '+_set_cmd' => (default => sub { [qw/ x y iconname /] },);
+has '+_set_cmd' => ( default => sub { [qw/ x y iconname /] } );
 
 __PACKAGE__->meta->make_immutable;
 
