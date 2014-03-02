@@ -108,7 +108,8 @@ sub calc_bar_length {
 
 sub setup_screen {
 
-    $lcdproc = Net::LCDproc->new;
+    my $server = shift @ARGV || 'localhost';
+    $lcdproc = Net::LCDproc->new(server => $server);
     $screen = Net::LCDproc::Screen->new(id => 'mediaplayer');
     $lcdproc->add_screen($screen);
 
