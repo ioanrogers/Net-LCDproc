@@ -11,7 +11,7 @@ extends 'Net::LCDproc::Widget';
 with 'Net::LCDproc::Role::Widget';
 
 has ['x', 'y', 'length'] => (
-    is       => 'rwp',
+    is       => 'rw',
     isa      => Int,
     required => 1,
     trigger  => \&_set_attr,

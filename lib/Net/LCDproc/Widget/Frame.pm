@@ -16,7 +16,7 @@ has direction => (
 );
 
 has ['left', 'right', 'top', 'bottom', 'width', 'height', 'speed'] => (
-    is       => 'rwp',
+    is       => 'rw',
     isa      => Int,
     required => 1,
     trigger  => \&_set_attr,
