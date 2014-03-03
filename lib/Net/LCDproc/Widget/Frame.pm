@@ -3,28 +3,28 @@ package Net::LCDproc::Widget::Frame;
 #ABSTRACT: A frame, a screen within a screen
 
 use v5.10.2;
-use Moose;
-use Moose::Util::TypeConstraints;
-use namespace::autoclean;
+use Moo;
+use Types::Standard qw/Enum Int/;
+use namespace::sweep;
 extends 'Net::LCDproc::Widget';
 
 has direction => (
     is       => 'rw',
-    isa      => enum(['v', 'h']),
+    isa      => Enum(['v', 'h']),
     required => 1,
+    trigger  => \&_set_attr,
 );
 
 has ['left', 'right', 'top', 'bottom', 'width', 'height', 'speed'] => (
-    is       => 'rw',
-    isa      => 'Int',
+    is       => 'rwp',
+    isa      => Int,
     required => 1,
+    trigger  => \&_set_attr,
 );
 
 has '+_set_cmd' =>
   (default => sub { [qw/left top right bottom width height direction speed/] },
   );
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 

@@ -3,23 +3,25 @@ package Net::LCDproc::Error;
 #ABSTRACT: Error class
 
 use v5.10.2;
-use Moose;
+use Moo;
 use Data::Dumper qw//;
-use namespace::autoclean;
+use namespace::sweep;
 
 extends 'Throwable::Error';
 
 has class_name => (
-    is       => 'rw',
-    isa      => 'Str',
+    is => 'rw',
+
+    #isa      => 'Str',
     required => 1,
     default  => sub { caller 11 },    # XXX: this seems fragile
 
 );
 
 has object => (
-    is        => 'ro',
-    isa       => 'Object',
+    is => 'ro',
+
+    #isa       => 'Object',
     predicate => 'has_object',
 );
 
@@ -44,8 +46,6 @@ sub throwf {
     $self->throw(message => sprintf $msg_str, @args);
     return;
 }
-
-__PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
 1;
 

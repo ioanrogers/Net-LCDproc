@@ -3,15 +3,16 @@ package Net::LCDproc::Widget::Icon;
 #ABSTRACT: 'icon' widget
 
 use v5.10.2;
-use Moose;
-use Moose::Util::TypeConstraints;
-use namespace::autoclean;
+use Moo;
+use Types::Standard qw/Enum Int/;
+use namespace::sweep;
 
 extends 'Net::LCDproc::Widget';
+with 'Net::LCDproc::Role::Widget';
 
 has iconname => (
     is  => 'rw',
-    isa => enum([
+    isa => Enum([
             qw/
               BLOCK_FILLED
               HEART_OPEN
@@ -40,17 +41,17 @@ has iconname => (
         ]
     ),
     required => 1,
+    trigger  => \&_set_attr,
 );
 
 has ['x', 'y'] => (
     is       => 'rw',
-    isa      => 'Int',
+    isa      => Int,
     required => 1,
+    trigger  => \&_set_attr,
 );
 
 has '+_set_cmd' => ( default => sub { [qw/ x y iconname /] } );
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 

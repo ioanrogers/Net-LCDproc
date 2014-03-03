@@ -3,23 +3,23 @@ package Net::LCDproc::Widget;
 #ABSTRACT: Base class for all the widgets
 
 use v5.10.2;
-use Moose;
-use Net::LCDproc::Meta::Widget;
+use Moo;
 use Log::Any qw($log);
-use namespace::autoclean;
+use Types::Standard qw/ArrayRef Bool InstanceOf Str/;
+use namespace::sweep;
 
 has id => (
     is       => 'ro',
-    isa      => 'Str',
+    isa      => Str,
     required => 1,
 );
 
 has type => (
     is      => 'ro',
-    isa     => 'Str',
+    isa     => Str,
     traits  => ['NoState'],
     default => sub {
-        my $pkg = shift->meta->{package};
+        my $pkg = ref $_[0];
         my @parts = split /::/, $pkg;
         return lc $parts[-1];
     },
@@ -27,58 +27,36 @@ has type => (
 
 has frame_id => (
     is        => 'rw',
-    isa       => 'Str',
-    traits    => ['NoState'],
+    isa       => Str,
     predicate => 'has_frame_id',
 
     #isa => 'Net::LCDproc::Widget::Frame',
 );
 
 has screen => (
-    is     => 'rw',
-    isa    => 'Net::LCDproc::Screen',
-    traits => ['NoState'],
+    is  => 'rw',
+    isa => InstanceOf ['Net::LCDproc::Screen'],
 );
 
 has is_new => (
-    traits   => [qw/Bool NoState/],
-    is       => 'ro',
-    isa      => 'Bool',
-    default  => 1,
-    required => 1,
-    handles  => {added => 'unset',},
+    is      => 'rw',
+    isa     => Bool,
+    default => 1,
 );
 
 has changed => (
-    traits  => [qw/Bool NoState/],
-    is      => 'rw',
-    isa     => 'Bool',
-    handles => {
-        has_changed    => 'set',
-        change_updated => 'unset',
-    },
+    is  => 'rw',
+    isa => Bool,
 );
 
 has _set_cmd => (
     is       => 'rw',
-    isa      => 'ArrayRef',
-    traits   => ['NoState'],
+    isa      => ArrayRef,
     required => 1,
     default  => sub { [] },
 );
 
 ### Public Methods
-
-sub set {
-    my ($self, $attr_name, $new_val) = @_;
-
-    $log->debugf('Setting %s: "%s"', $attr_name, $new_val) if $log->is_debug;
-    my $attr = $self->meta->get_attribute($attr_name);
-    $attr->set_value($self, $new_val);
-    $self->is_changed;
-
-    return 1;
-}
 
 sub update {
     my $self = shift;
@@ -97,7 +75,7 @@ sub update {
 
     $self->screen->_lcdproc->_send_cmd($cmd_str);
 
-    $self->change_updated;
+    $self->changed(0);
     return 1;
 }
 
@@ -117,16 +95,8 @@ sub _get_set_cmd_str {
 
     my $cmd_str = sprintf 'widget_set %s %s', $self->screen->id, $self->id;
 
-    foreach my $name (@{$self->_set_cmd}) {
-        my $attr = $self->meta->get_attribute($name);
-        my $val  = $attr->get_value($self);
-
-        # should only ever be Str or Int
-        if ($attr->type_constraint eq 'Str') {
-            $cmd_str .= " \"$val\"";
-        } else {
-            $cmd_str .= " $val";
-        }
+    foreach my $attr (@{$self->_set_cmd}) {
+        $cmd_str .= sprintf ' "%s"', $self->$attr;
     }
 
     return $cmd_str;
@@ -144,13 +114,11 @@ sub _create_widget_on_server {
     }
     $self->screen->_lcdproc->_send_cmd($add_str);
 
-    $self->added;
+    $self->is_new(0);
 
     # make sure it gets set
-    $self->has_changed;
+    $self->changed(1);
     return 1;
 }
-
-__PACKAGE__->meta->make_immutable;
 
 1;

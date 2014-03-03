@@ -1,4 +1,4 @@
-#!env perl
+#!/usr/bin/env perl
 
 use v5.10.2;
 use strict;
@@ -9,12 +9,8 @@ use Net::DBus::Dumper;
 use Log::Any::Adapter;
 use Log::Dispatch;
 use Net::LCDproc;
-use Net::LCDproc::Screen;
-use Net::LCDproc::Widget::Title;
-use Net::LCDproc::Widget::String;
-use Net::LCDproc::Widget::Icon;
-use Net::LCDproc::Widget::Scroller;
-use Net::LCDproc::Widget::HBar;
+
+no if $] >= 5.018, 'warnings', 'experimental::smartmatch';
 
 my $log;
 my $mediaplayer;

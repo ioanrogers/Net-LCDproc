@@ -3,15 +3,28 @@ package Net::LCDproc;
 #ABSTRACT: Client library to interact with L<LCDproc|http://lcdproc.sourceforge.net/>
 
 use v5.10.2;
-use Moose;
+use Moo;
+
 use Net::LCDproc::Error;
+use Net::LCDproc::Screen;
+use Net::LCDproc::Widget::HBar;
+use Net::LCDproc::Widget::Icon;
+use Net::LCDproc::Widget::Num;
+use Net::LCDproc::Widget::Scroller;
+use Net::LCDproc::Widget::String;
+use Net::LCDproc::Widget::Title;
+use Net::LCDproc::Widget::VBar;
+
 use Log::Any qw($log);
 use IO::Socket::INET;
-use Readonly;
-use namespace::autoclean;
+use Const::Fast;
+use Types::Standard qw/ArrayRef HashRef InstanceOf Int Str/;
+use namespace::sweep;
 
-Readonly my $PROTOCOL_VERSION => 0.3;
-Readonly my $MAX_DATA_READ    => 4096;
+no if $] >= 5.018, 'warnings', 'experimental::smartmatch';
+
+const my $PROTOCOL_VERSION => 0.3;
+const my $MAX_DATA_READ    => 4096;
 
 sub BUILD {
     my $self = shift;
@@ -30,52 +43,45 @@ sub DEMOLISH {
 
 has server => (
     is            => 'ro',
-    isa           => 'Str',
-    required      => 1,
+    isa           => Str,
     default       => 'localhost',
     documentation => 'Hostname or IP address of LCDproc server',
 );
 
 has port => (
     is            => 'ro',
-    isa           => 'Int',
-    required      => 1,
+    isa           => Int,
     default       => 13666,
     documentation => 'Port the LCDproc server is listening on',
 );
 
 has ['width', 'height'] => (
     is            => 'rw',
-    isa           => 'Int',
+    isa           => Int,
     documentation => 'Dimensions of the display in cells',
 );
 
 has ['cell_width', 'cell_height'] => (
     is            => 'rw',
-    isa           => 'Int',
+    isa           => Int,
     documentation => 'Dimensions of a cell in pixels',
 );
 
 has screens => (
     is            => 'rw',
-    traits        => ['Array'],
-    isa           => 'ArrayRef[Net::LCDproc::Screen]',
+    isa           => ArrayRef [InstanceOf ['Net::LCDproc::Screen']],
     documentation => 'Array of active screens',
-    default       => sub { [] },
-    lazy          => 1,
-    handles       => {push_screen => 'push',},
+    default => sub { [] },
 );
 
 has socket => (
-    is       => 'ro',
-    isa      => 'IO::Socket::INET',
-    builder  => '_build_socket',
-    required => 1,
+    is  => 'lazy',
+    isa => InstanceOf ['IO::Socket::INET'],
 );
 
 has responses => (
     is       => 'ro',
-    isa      => 'HashRef',
+    isa      => HashRef,
     required => 1,
     default  => sub {
         return {
@@ -211,7 +217,7 @@ sub _send_hello {
 sub add_screen {
     my ($self, $screen) = @_;
     $screen->_lcdproc($self);
-    $self->push_screen($screen);
+    push @{$self->screens}, $screen;
     return 1;
 }
 
@@ -235,34 +241,34 @@ sub remove_screen {
 sub update {
     my $self = shift;
     foreach my $s (@{$self->screens}) {
-        $s->update();
+        $s->update;
     }
     return 1;
 }
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 
 =head1 SYNOPSIS
 
-  $lcdproc = Net::LCDproc->new;
-  $screen = Net::LCDproc::Screen->new( id => "main" );
+  use Net::LCDproc; # this loads all the mods under Net::LCDproc::*
 
-  my $title = Net::LCDproc::Widget::Title->new( id => "title" );
+  my $lcdproc = Net::LCDproc->new;
+  my $screen = Net::LCDproc::Screen->new(id => 'main');
+
+  my $title = Net::LCDproc::Widget::Title->new(id => 'title');
   $title->text('My Screen Title');
   $lcdproc->add_screen($screen);
 
-  $screen->set( 'name',      "Test Screen" );
-  $screen->set( 'heartbeat', "off" );
+  $screen->set('name',      'Test Screen');
+  $screen->set('heartbeat', 'off');
 
   $screen->add_widget($title);
 
   my $wdgt = Net::LCDproc::Widget::String->new(
-      id   => "wdgt",
+      id   => 'wdgt',
       x    => 1,
       y    => 2,
-      text => "Some Text",
+      text => 'Some Text',
   );
 
   $screen->add_widget($wdgt);

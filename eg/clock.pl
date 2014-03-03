@@ -1,4 +1,4 @@
-#!env perl
+#!/usr/bin/env perl
 
 use v5.10.2;
 
@@ -10,10 +10,6 @@ use Log::Any::Adapter;
 use Log::Dispatch;
 
 use Net::LCDproc;
-use Net::LCDproc::Screen;
-use Net::LCDproc::Widget::Title;
-use Net::LCDproc::Widget::String;
-use Net::LCDproc::Widget::Num;
 
 my $lcdproc;
 my $screen1;
@@ -54,8 +50,8 @@ sub add_screen {
     }
 
     $lcdproc->add_screen($screen);
-    $screen->set('name',      "clock");
-    $screen->set('heartbeat', "off");
+    $screen->set('name',      'clock');
+    $screen->set('heartbeat', 'off');
 
     return $screen;
 }

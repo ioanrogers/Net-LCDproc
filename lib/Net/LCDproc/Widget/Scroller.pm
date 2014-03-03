@@ -3,38 +3,36 @@ package Net::LCDproc::Widget::Scroller;
 #ABSTRACT: 'scroller' widget
 
 use v5.10.2;
-use Moose;
-use Moose::Util::TypeConstraints;
-use namespace::autoclean;
+use Moo;
+use Types::Standard qw/Enum Int Str/;
+use namespace::sweep;
 
 extends 'Net::LCDproc::Widget';
+with 'Net::LCDproc::Role::Widget';
 
 has text => (
     is       => 'rw',
-    isa      => 'Str',
+    isa      => Str,
     required => 1,
-    default  => q{},
-    trigger  => sub {
-        $_[0]->has_changed;
-    },
+    trigger  => \&_set_attr,
 );
 
 has direction => (
     is       => 'rw',
-    isa      => enum([qw/h v m/]),
+    isa      => Enum([qw/h v m/]),
     required => 1,
+    trigger  => \&_set_attr,
 );
 
 has ['left', 'right', 'top', 'bottom', 'speed'] => (
     is       => 'rw',
-    isa      => 'Int',
+    isa      => Int,
     required => 1,
+    trigger  => \&_set_attr,
 );
 
 has '+_set_cmd' =>
   (default => sub { [qw/ left top right bottom direction speed text /] },);
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 
