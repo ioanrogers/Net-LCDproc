@@ -1,0 +1,15 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Net-LCDproc
+Upstream-Contact: Ioan Rogers <ioanr@cpan.org>
+Source: http://github.com/ioanrogers/Net-LCDproc
+
+Files: *
+Copyright: 2010-12 Ioan Rogers <ioanr@cpan.org>
+License: GPL-3
+
+Files: doc/lcdproc_protocol.pod
+Copyright: 2010 Markus Dolze
+           2006 Peter Marschall
+           2002 Guillaume Filion
+License: GFDL-1.1+
+
