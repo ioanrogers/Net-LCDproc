@@ -13,7 +13,7 @@ Package: libnet-lcdproc-perl
 Architecture: all
 Depends: ${perl:Depends}, ${misc:Depends},
  libmoo-perl, libthrowable-perl, liblog-any-perl, libconst-fast-perl,
- libnamespace-sweep-perl, libtype-tiny-perl, libtest-checkdeps-perl
+ libnamespace-sweep-perl, libtype-tiny-perl
 Description: LCDproc client library
  LCDproc client library
  .
