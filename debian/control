@@ -1,28 +1,19 @@
 Source: libnet-lcdproc-perl
-Maintainer: Ioan Rogers <ioanr@cpan.org>
+Maintainer: Ioan Rogers <ioan@dirtysoft.ca>
 Section: perl
 Priority: optional
-Build-Depends: debhelper (>= 9),
-               perl
-Build-Depends-Indep: libmoose-perl,
-                     libthrowable-perl,
-                     liblog-any-perl,
-                     libreadonly-perl,
-                     libnamespace-autoclean-perl
-Standards-Version: 3.9.3
+Build-Depends: debhelper (>= 9), perl
+Build-Depends-Indep: libmoo-perl, libthrowable-perl,liblog-any-perl,
+ libconst-fast-perl, libnamespace-sweep-perl, libmodule-build-tiny-perl,
+ libtype-tiny-perl, libtest-checkdeps-perl
+Standards-Version: 3.9.4
 Homepage: https://metacpan.org/release/Net-LCDproc/
 
 Package: libnet-lcdproc-perl
 Architecture: all
-Depends: ${perl:Depends},
-         ${misc:Depends},
-         libmoose-perl,
-         libthrowable-perl,
-         perl,
-         liblog-any-perl,
-         libreadonly-perl,
-         libnamespace-autoclean-perl
-Recommends: libreadonly-xs-perl
+Depends: ${perl:Depends}, ${misc:Depends},
+ libmoo-perl, libthrowable-perl, liblog-any-perl, libconst-fast-perl,
+ libnamespace-sweep-perl, libtype-tiny-perl, libtest-checkdeps-perl
 Description: LCDproc client library
  LCDproc client library
  .

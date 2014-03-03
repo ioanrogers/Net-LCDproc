@@ -1,3 +1,10 @@
+libnet-lcdproc-perl (0.1.2-1) unstable; urgency=low
+
+  * New upstream release
+  * Updated new dependencies
+
+ -- Ioan Rogers <ioan@dirtysoft.ca>  Mon, 03 Mar 2014 07:50:14 -0800
+
 libnet-lcdproc-perl (0.1.1) unstable; urgency=low
 
   * New upstream release
