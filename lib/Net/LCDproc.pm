@@ -3,7 +3,7 @@ package Net::LCDproc;
 #ABSTRACT: Client library to interact with L<LCDproc|http://lcdproc.sourceforge.net/>
 
 use v5.10.2;
-use Moo;
+use Moo 1.001000;
 
 use Net::LCDproc::Error;
 use Net::LCDproc::Screen;
