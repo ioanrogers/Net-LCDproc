@@ -39,8 +39,8 @@ sub get_metadata {
       $mpris->Get('org.mpris.MediaPlayer2.Player', "Metadata");
 
     my $metadata = {
-        artist     => $raw_metadata->{'xesam:artist'}->[0],         # I am lazy
-        album      => $raw_metadata->{'xesam:album'},
+        artist     => ($raw_metadata->{'xesam:artist'}->[0] || 'unknown'),         # I am lazy
+        album      => ($raw_metadata->{'xesam:album'} || 'unknown'),
         title      => $raw_metadata->{'xesam:title'},
         tracknum   => $raw_metadata->{'xesam:trackNumber'},
         length_sec => $raw_metadata->{'mpris:length'} / 1_000_000,
@@ -84,12 +84,12 @@ sub get_mpris {
 
 sub calc_bar_length {
     my $metadata = shift;
-
-    if (!defined $metadata->{length_sec}) {
+    
+    if (!$metadata->{length_sec}) {
         return 0;
     }
 
-    if (!defined $metadata->{position_sec}) {
+    if (!$metadata->{position_sec}) {
         return 0;
     }
 
