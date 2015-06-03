@@ -76,6 +76,7 @@ has screens => (
 
 has socket => (
     is  => 'lazy',
+    predicate => 1,
     isa => InstanceOf ['IO::Socket::INET'],
 );
 
