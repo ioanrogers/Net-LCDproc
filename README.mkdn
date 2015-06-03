@@ -4,7 +4,7 @@ Net::LCDproc - Client library to interact with [LCDproc](http://lcdproc.sourcefo
 
 # VERSION
 
-version 0.1.3
+version 0.104
 
 # SYNOPSIS
 
@@ -65,7 +65,7 @@ Ioan Rogers <ioanr@cpan.org>
 
 # COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2014 by Ioan Rogers.
+This software is Copyright (c) 2015 by Ioan Rogers.
 
 This is free software, licensed under:
 
