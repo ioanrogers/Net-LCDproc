@@ -3,9 +3,10 @@ package Net::LCDproc::Widget::Frame;
 #ABSTRACT: A frame, a screen within a screen
 
 use v5.10.2;
-use Moo;
 use Types::Standard qw/Enum Int/;
-use namespace::sweep;
+use Moo;
+use namespace::clean;
+
 extends 'Net::LCDproc::Widget';
 
 has direction => (
@@ -52,4 +53,3 @@ Frame dimension in chars
 Speed of scrolling, if needed
 
 =back
-

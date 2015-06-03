@@ -3,10 +3,10 @@ package Net::LCDproc::Screen;
 #ABSTRACT: represents an LCDproc screen
 
 use v5.10.2;
-use Moo;
 use Types::Standard qw/ArrayRef Bool Enum HashRef InstanceOf Int Str/;
 use Log::Any qw($log);
-use namespace::sweep;
+use Moo;
+use namespace::clean;
 
 has id => (is => 'ro', isa => Str, required => 1);
 

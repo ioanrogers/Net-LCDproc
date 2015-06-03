@@ -3,9 +3,9 @@ package Net::LCDproc::Widget::Scroller;
 #ABSTRACT: 'scroller' widget
 
 use v5.10.2;
-use Moo;
 use Types::Standard qw/Enum Int Str/;
-use namespace::sweep;
+use Moo;
+use namespace::clean;
 
 extends 'Net::LCDproc::Widget';
 with 'Net::LCDproc::Role::Widget';
@@ -35,4 +35,3 @@ has '+_set_cmd' =>
   (default => sub { [qw/ left top right bottom direction speed text /] },);
 
 1;
-

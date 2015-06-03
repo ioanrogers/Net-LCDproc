@@ -3,9 +3,9 @@ package Net::LCDproc::Error;
 #ABSTRACT: Error class
 
 use v5.10.2;
-use Moo;
 use Data::Dumper qw//;
-use namespace::sweep;
+use Moo;
+use namespace::clean;
 
 extends 'Throwable::Error';
 

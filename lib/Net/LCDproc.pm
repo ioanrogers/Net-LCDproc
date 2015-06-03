@@ -3,8 +3,6 @@ package Net::LCDproc;
 #ABSTRACT: Client library to interact with L<LCDproc|http://lcdproc.sourceforge.net/>
 
 use v5.10.2;
-use Moo 1.001000;
-
 use Net::LCDproc::Error;
 use Net::LCDproc::Screen;
 use Net::LCDproc::Widget::HBar;
@@ -19,7 +17,8 @@ use Log::Any qw($log);
 use IO::Socket::INET;
 use Const::Fast;
 use Types::Standard qw/ArrayRef HashRef InstanceOf Int Str/;
-use namespace::sweep;
+use Moo 1.001000;
+use namespace::clean;
 
 no if $] >= 5.018, 'warnings', 'experimental::smartmatch';
 

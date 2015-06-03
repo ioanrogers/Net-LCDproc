@@ -3,9 +3,9 @@ package Net::LCDproc::Widget::String;
 #ABSTRACT: show regular strings
 
 use v5.10.2;
-use Moo;
 use Types::Standard qw/Int Str/;
-use namespace::sweep;
+use Moo;
+use namespace::clean;
 
 extends 'Net::LCDproc::Widget';
 with 'Net::LCDproc::Role::Widget';

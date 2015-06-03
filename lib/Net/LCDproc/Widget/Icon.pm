@@ -3,9 +3,9 @@ package Net::LCDproc::Widget::Icon;
 #ABSTRACT: 'icon' widget
 
 use v5.10.2;
-use Moo;
 use Types::Standard qw/Enum Int/;
-use namespace::sweep;
+use Moo;
+use namespace::clean;
 
 extends 'Net::LCDproc::Widget';
 with 'Net::LCDproc::Role::Widget';
@@ -54,4 +54,3 @@ has ['x', 'y'] => (
 has '+_set_cmd' => ( default => sub { [qw/ x y iconname /] } );
 
 1;
-

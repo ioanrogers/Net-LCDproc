@@ -3,10 +3,10 @@ package Net::LCDproc::Widget;
 #ABSTRACT: Base class for all the widgets
 
 use v5.10.2;
-use Moo;
 use Log::Any qw($log);
 use Types::Standard qw/ArrayRef Bool InstanceOf Str/;
-use namespace::sweep;
+use Moo;
+use namespace::clean;
 
 has id => (
     is       => 'ro',

@@ -3,9 +3,9 @@ package Net::LCDproc::Widget::VBar;
 #ABSTRACT: draw a vertical bar
 
 use v5.10.2;
-use Moo;
 use Types::Standard qw/Int/;
-use namespace::sweep;
+use Moo;
+use namespace::clean;
 
 extends 'Net::LCDproc::Widget';
 with 'Net::LCDproc::Role::Widget';
@@ -20,4 +20,3 @@ has ['x', 'y', 'length'] => (
 has '+_set_cmd' => ( default => sub { [qw/ x y length /] } );
 
 1;
-
