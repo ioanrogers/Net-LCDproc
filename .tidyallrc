@@ -1,6 +1,6 @@
 [PerlTidy]
 select = **/*.{pl,pm,t}
-argv = --profile=$ROOT/perltidyrc
+argv = --profile=$ROOT/.perltidyrc
 
 [Perl::AlignMooseAttributes]
 select = lib/**/*.pm 
